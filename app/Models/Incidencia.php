@@ -31,5 +31,12 @@ class Incidencia extends Model
         return $this->belongsTo(Prioridad::class);
     }
 
+    public function comentario() {
+        return $this->hasMany(Comentario::class);
+    }
+
+    public function imagen() {
+        return $this->hasMany(Imagen::class);
+    }
 
 }

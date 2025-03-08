@@ -38,7 +38,7 @@ class UsuarioSeeder extends Seeder
             'nombre' => 'Pol Marc',
             'email' => 'polmarcmontero@gmail.com',
             'password' => bcrypt('qweQWE123'),
-            'sedes_id' => 1,
+            'sedes_id' => 3,
             'roles_id' => 3,
             'created_at' => $now,
             'updated_at' => $now,
@@ -70,6 +70,76 @@ class UsuarioSeeder extends Seeder
             'password' => bcrypt('qweQWE123'),
             'sedes_id' => 2,
             'roles_id' => 3,
+            'created_at' => $now,
+            'updated_at' => $now,
+        ]);
+
+        Usuario::create([
+            'nombre' => 'Gestor 3',
+            'email' => 'gestor3@gmail.com',
+            'password' => bcrypt('qweQWE123'),
+            'sedes_id' => 3,
+            'roles_id' => 3,
+            'created_at' => $now,
+            'updated_at' => $now,
+        ]);
+
+        Usuario::create([
+            'nombre' => 'Tecnico 1',
+            'email' => 'tecnico1@gmail.com',
+            'password' => bcrypt('qweQWE123'),
+            'sedes_id' => 1,
+            'roles_id' => 4,
+            'created_at' => $now,
+            'updated_at' => $now,
+        ]);
+
+        Usuario::create([
+            'nombre' => 'Tecnico 2',
+            'email' => 'tecnico2@gmail.com',
+            'password' => bcrypt('qweQWE123'),
+            'sedes_id' => 1,
+            'roles_id' => 4,
+            'created_at' => $now,
+            'updated_at' => $now,
+        ]);
+
+        Usuario::create([
+            'nombre' => 'Tecnico 3',
+            'email' => 'tecnico3@gmail.com',
+            'password' => bcrypt('qweQWE123'),
+            'sedes_id' => 2,
+            'roles_id' => 4,
+            'created_at' => $now,
+            'updated_at' => $now,
+        ]);
+
+        Usuario::create([
+            'nombre' => 'Tecnico 4',
+            'email' => 'tecnico4@gmail.com',
+            'password' => bcrypt('qweQWE123'),
+            'sedes_id' => 2,
+            'roles_id' => 4,
+            'created_at' => $now,
+            'updated_at' => $now,
+        ]);
+
+        Usuario::create([
+            'nombre' => 'Tecnico 5',
+            'email' => 'tecnico5@gmail.com',
+            'password' => bcrypt('qweQWE123'),
+            'sedes_id' => 3,
+            'roles_id' => 4,
+            'created_at' => $now,
+            'updated_at' => $now,
+        ]);
+
+        Usuario::create([
+            'nombre' => 'Tecnico 6',
+            'email' => 'tecnico6@gmail.com',
+            'password' => bcrypt('qweQWE123'),
+            'sedes_id' => 3,
+            'roles_id' => 4,
             'created_at' => $now,
             'updated_at' => $now,
         ]);

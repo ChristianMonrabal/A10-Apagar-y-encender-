@@ -23,24 +23,14 @@ class Usuario extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    // Relación con la tabla sedes
     public function sede()
     {
-        return $this->belongsTo(Sede::class, 'sede_id');
+        return $this->belongsTo(Sede::class, 'sedes_id');
     }
 
-    // Relación con la tabla roles
     public function rol()
     {
-        return $this->belongsTo(Rol::class, 'rol_id');
-    }
-
-    public function tecnico() {
-        return $this->belongsTo(Usuario::class);
-    }
-
-    public function gestor() {
-        return $this->belongsTo(Usuario::class);
+        return $this->belongsTo(Rol::class, 'roles_id');
     }
 
     public function incidencia_cliente() {

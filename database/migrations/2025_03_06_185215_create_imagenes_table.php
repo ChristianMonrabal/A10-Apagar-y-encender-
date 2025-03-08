@@ -10,9 +10,9 @@ return new class extends Migration
     {
         Schema::create('imagenes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('incidencia_id')->constrained('incidencias');
+            $table->foreignId('incidencias_id')->constrained('incidencias');
             $table->string('ruta');
-            $table->timestamps(0); // created_at, updated_at
+            $table->timestamps(0);
         });
     }
     
