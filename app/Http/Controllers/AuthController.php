@@ -31,7 +31,15 @@ class AuthController extends Controller
             if ($user->activo) {
                 Auth::login($user);
                 $request->session()->regenerate();
-                return redirect()->intended('/');
+
+                switch ($user->rol_id) {
+                    case 1:
+                        return redirect('/admin');
+                    case 2: 
+                        return redirect('/client');
+                    default: 
+                        return redirect('/');
+                }
             } else {
                 return back()->withErrors([
                     'login' => 'Tu cuenta está inactiva, contacta al administrador.',
