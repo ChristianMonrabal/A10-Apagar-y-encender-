@@ -18,25 +18,25 @@ class RolSeeder extends Seeder
         $now = Carbon::now();
 
         Rol::create([
-            'nombre' => 'cliente',
+            'nombre' => 'Cliente',
             'created_at' => $now,
             'updated_at' => $now,
         ]);
 
         Rol::create([
-            'nombre' => 'administrador',
+            'nombre' => 'Administrador',
             'created_at' => $now,
             'updated_at' => $now,
         ]);
         
         Rol::create([
-            'nombre' => 'gestor de equipo',
+            'nombre' => 'Gestor de equipo',
             'created_at' => $now,
             'updated_at' => $now,
         ]);   
 
         Rol::create([
-            'nombre' => 'tecnico de mantenimiento',
+            'nombre' => 'Tecnico de mantenimiento',
             'created_at' => $now,
             'updated_at' => $now,
         ]);   
