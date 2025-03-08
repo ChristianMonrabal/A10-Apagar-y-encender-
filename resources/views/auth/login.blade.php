@@ -12,7 +12,7 @@
         <div class="logo">
             <img src="{{ asset('img/icon.png') }}">
         </div>
-        <h2>Inicia sesión para continuar</h2>
+        <h2>Jira Service Management</h2>
         <br>
         <form action="{{ route('login') }}" method="POST">
             @csrf
@@ -33,7 +33,7 @@
             @if ($errors->has('login'))
                 <p class="error-message">{{ $errors->first('login') }}</p>
             @endif
-            <button type="submit">Continuar</button>
+            <button type="submit">Iniciar sesión</button>
         </form>
     </div>
 

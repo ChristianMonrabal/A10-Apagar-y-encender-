@@ -19,6 +19,10 @@ class AuthController extends Controller
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
+        ], [
+            'email.required' => 'Este campo no puede estar vacío.',
+            'email.email' => 'El email debe ser una dirección de correo válida.',
+            'password.required' => 'Este campo no puede estar vacío.',
         ]);
 
         $user = Usuario::where('email', $request->email)->first();
@@ -36,7 +40,7 @@ class AuthController extends Controller
         }
 
         return back()->withErrors([
-            'login' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
+            'login' => 'Las credenciales son incorrectas.',
         ])->withInput(['email' => $request->email]);
     }
 
