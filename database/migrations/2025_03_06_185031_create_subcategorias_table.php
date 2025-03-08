@@ -11,8 +11,8 @@ return new class extends Migration
         Schema::create('subcategorias', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
-            $table->foreignId('categoria_id')->constrained('categorias');
-            $table->timestamps(0); // created_at, updated_at
+            $table->foreignId('categorias_id')->constrained('categorias');
+            $table->timestamps(0);
         });
     }
     

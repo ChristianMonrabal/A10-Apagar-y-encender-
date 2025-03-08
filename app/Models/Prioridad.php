@@ -6,5 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Prioridad extends Model
 {
-    //
+    public function incidencia() {
+        return $this->hasOne(Incidencia::class);
+    }
 }
