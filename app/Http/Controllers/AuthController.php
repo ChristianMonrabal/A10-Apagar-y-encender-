@@ -19,6 +19,10 @@ class AuthController extends Controller
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
+        ], [
+            'email.required' => 'Este campo no puede estar vacío.',
+            'email.email' => 'El email debe ser una dirección de correo válida.',
+            'password.required' => 'Este campo no puede estar vacío.',
         ]);
 
         $user = Usuario::where('email', $request->email)->first();
@@ -27,7 +31,15 @@ class AuthController extends Controller
             if ($user->activo) {
                 Auth::login($user);
                 $request->session()->regenerate();
-                return redirect()->intended('/');
+
+                switch ($user->rol_id) {
+                    case 1:
+                        return redirect('/admin');
+                    case 2: 
+                        return redirect('/client');
+                    default: 
+                        return redirect('/');
+                }
             } else {
                 return back()->withErrors([
                     'login' => 'Tu cuenta está inactiva, contacta al administrador.',
@@ -36,7 +48,7 @@ class AuthController extends Controller
         }
 
         return back()->withErrors([
-            'login' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
+            'login' => 'Las credenciales son incorrectas.',
         ])->withInput(['email' => $request->email]);
     }
 

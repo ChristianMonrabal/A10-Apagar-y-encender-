@@ -113,3 +113,29 @@ CREATE TABLE imagenes (
     updated_at TIMESTAMP NULL,
     FOREIGN KEY (incidencia_id) REFERENCES incidencias(id)
 ) ENGINE=InnoDB;
+
+
+-- INSERTS SQL
+SELECT * FROM jira_j23.roles;
+SELECT * FROM jira_j23.sedes;
+SELECT * FROM jira_j23.usuarios;
+
+
+USE jira_j23;
+INSERT INTO roles (nombre, created_at, updated_at) VALUES
+('administrador', NOW(), NOW()),
+('cliente', NOW(), NOW()),
+('gestor', NOW(), NOW()),
+('técnico', NOW(), NOW());
+
+INSERT INTO sedes (id, nombre, created_at, updated_at) VALUES
+    (1, 'Barcelona', NOW(), NOW()),
+    (2, 'Berlín', NOW(), NOW()),
+    (3, 'Montreal', NOW(), NOW());
+
+INSERT INTO usuarios (nombre, email, password, sede_id, rol_id, activo, created_at, updated_at) 
+VALUES 
+    ('Juan Pérez', 'juan@empresa.com', '$2y$10$GKcxpoZSFHvaNczs1N0INeJUm.KBnasdtfTO8DtQzvRJM3CSRvxeS', 1, 1, 1, NOW(), NOW()), -- Administrador
+    ('Ana Gómez', 'ana@empresa.com', '$2y$10$GKcxpoZSFHvaNczs1N0INeJUm.KBnasdtfTO8DtQzvRJM3CSRvxeS', 2, 2, 1, NOW(), NOW()), -- Cliente
+    ('Carlos López', 'carlos@empresa.com', '$2y$10$GKcxpoZSFHvaNczs1N0INeJUm.KBnasdtfTO8DtQzvRJM3CSRvxeS', 3, 3, 1, NOW(), NOW()), -- Gestor
+    ('Elena Ruiz', 'elena@empresa.com', '$2y$10$GKcxpoZSFHvaNczs1N0INeJUm.KBnasdtfTO8DtQzvRJM3CSRvxeS', 3, 4, 1, NOW(), NOW()); -- Técnico
