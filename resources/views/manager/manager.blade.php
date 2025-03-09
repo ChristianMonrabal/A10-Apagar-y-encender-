@@ -5,7 +5,7 @@
 @section('content')
 
     @foreach ($incidencias as $incidencia)
-        <div style="padding-bottom: 17px;">
+        <div style="padding-bottom: 17px; ">
             <p>{{$incidencia->titulo}}</p>
             <p>{{$incidencia->cliente->nombre}}</p>
             <p>{{$incidencia->gestor->nombre}}</p>
