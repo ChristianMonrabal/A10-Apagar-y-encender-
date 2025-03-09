@@ -32,11 +32,13 @@ class AuthController extends Controller
                 Auth::login($user);
                 $request->session()->regenerate();
 
-                switch ($user->rol_id) {
+                switch ($user->roles_id) {
                     case 1:
                         return redirect('/admin');
                     case 2: 
                         return redirect('/client');
+                    case 3: 
+                        return redirect('/manager');
                     default: 
                         return redirect('/');
                 }
