@@ -18,56 +18,56 @@ class SubcategoriaSeeder extends Seeder
         $now = Carbon::now();
 
         Subcategoria::create([
-            'nombre' => 'Aplicació gestió administrativa',
+            'nombre' => 'Aplicación gestión administrativa',
             'categorias_id' => 1,
             'created_at' => $now,
             'updated_at' => $now,
         ]);
 
         Subcategoria::create([
-            'nombre' => 'Accés remot',
+            'nombre' => 'Acceso remoto',
             'categorias_id' => 1,
             'created_at' => $now,
             'updated_at' => $now,
         ]);
 
         Subcategoria::create([
-            'nombre' => 'Aplicació de videoconferència',
+            'nombre' => 'Aplicación de videoconferencia',
             'categorias_id' => 1,
             'created_at' => $now,
             'updated_at' => $now,
         ]);
 
         Subcategoria::create([
-            'nombre' => 'Imatge de projector defectuosa',
+            'nombre' => 'Imagen del proyector defectuosa',
             'categorias_id' => 1,
             'created_at' => $now,
             'updated_at' => $now,
         ]);
 
         Subcategoria::create([
-            'nombre' => 'Problema amb el teclat',
+            'nombre' => 'Problema con el teclado',
             'categorias_id' => 2,
             'created_at' => $now,
             'updated_at' => $now,
         ]);
 
         Subcategoria::create([
-            'nombre' => 'El ratolí no funciona',
+            'nombre' => 'El ratón no funciona',
             'categorias_id' => 2,
             'created_at' => $now,
             'updated_at' => $now,
         ]);
 
         Subcategoria::create([
-            'nombre' => "Monitor no s'encén",
+            'nombre' => 'El monitor no enciende',
             'categorias_id' => 2,
             'created_at' => $now,
             'updated_at' => $now,
         ]);
 
         Subcategoria::create([
-            'nombre' => 'Imatge de projector defectuosa',
+            'nombre' => 'Imagen del proyector defectuosa',
             'categorias_id' => 2,
             'created_at' => $now,
             'updated_at' => $now,

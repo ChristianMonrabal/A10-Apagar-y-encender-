@@ -20,23 +20,23 @@ class Incidencia extends Model
     }
 
     public function subcategoria() {
-        return $this->belongsTo(Subcategoria::class);
+        return $this->belongsTo(Subcategoria::class, 'subcategorias_id');
     }
 
     public function estado() {
-        return $this->belongsTo(Estado::class);
+        return $this->belongsTo(Estado::class, 'estados_id');
     }
 
     public function prioridad() {
-        return $this->belongsTo(Prioridad::class);
+        return $this->belongsTo(Prioridad::class, 'prioridades_id');
     }
 
     public function comentario() {
-        return $this->hasMany(Comentario::class);
+        return $this->hasMany(Comentario::class, 'incidencias_id');
     }
 
     public function imagen() {
-        return $this->hasMany(Imagen::class);
+        return $this->hasMany(Imagen::class, 'incidencias_id');
     }
 
 }
