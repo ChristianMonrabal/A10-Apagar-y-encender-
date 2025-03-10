@@ -6,12 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Subcategoria extends Model
 {
-    public function categoria() {
-        return $this->belongsTo(Categoria::class);
-    }
+    protected $fillable = ['nombre', 'categorias_id'];
 
-    
-    public function incidencia() {
-        return $this->hasOne(Incidencia::class);
+    public function categoria()
+    {
+        return $this->belongsTo(Categoria::class, 'categorias_id');
     }
 }

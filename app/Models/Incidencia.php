@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Incidencia extends Model
 {
-    
     public function cliente() {
         return $this->belongsTo(Usuario::class);
     }
@@ -38,5 +37,14 @@ class Incidencia extends Model
     public function imagen() {
         return $this->hasMany(Imagen::class, 'incidencias_id');
     }
-
+    
+    /**
+     * Accessor para obtener la categoría a través de la subcategoría.
+     * Si existe la subcategoría, se devuelve la categoría asociada;
+     * en caso contrario, se retorna null.
+     */
+    public function getCategoriaAttribute()
+    {
+        return $this->subcategoria ? $this->subcategoria->categoria : null;
+    }
 }
