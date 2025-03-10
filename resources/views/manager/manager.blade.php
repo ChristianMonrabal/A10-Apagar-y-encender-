@@ -29,6 +29,21 @@
                             @endforeach
                         </select>
                     </div>
+                    <div class="col-md-4">
+                        <label for="estado" class="form-label">Estado</label>
+                        <select name="estado" id="estado" class="form-select" onchange="this.form.submit()">
+                            <option value="cerradas" {{ request('estado') == 'cerradas' ? 'selected' : '' }}>Ver Cerradas</option>
+                            <option value="abiertas" {{ request('estado') == 'abiertas' ? 'selected' : '' }}>Quitar Cerradas</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="orden" class="form-label">Orden</label>
+                        <select name="orden" id="orden" class="form-select" onchange="this.form.submit()">
+                            <option value="asc" {{ request('orden') == 'asc' ? 'selected' : '' }}>Ascendente</option>
+                            <option value="desc" {{ request('orden') == 'desc' ? 'selected' : '' }}>Descendiente</option>
+                        </select>
+                    </div>
+
 
                     <div class="col-12 text-center mt-3">
                         <button type="button" class="btn btn-secondary" onclick="window.location='{{ route('manager') }}'">Borrar Filtros</button>
@@ -44,7 +59,7 @@
                 <div style="padding-bottom: 17px; ">
                     <p>{{$incidencia->titulo}}</p>
                     <p>{{$incidencia->cliente->nombre}}</p>
-                    <p>{{$incidencia->gestor->nombre}}</p>
+                    <p>{{$incidencia->tecnico->nombre}}</p>
                     <p>{{$incidencia->subcategoria->nombre}}</p>
                     <p>{{$incidencia->descripcion}}</p>
                     <p>{{$incidencia->estado->nombre}}</p>

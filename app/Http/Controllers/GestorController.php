@@ -17,6 +17,8 @@ class GestorController extends Controller
             $sedeGestor = Auth::user()->sedes_id;
             $tecnico = $request->input('tecnico');
             $prioridad = $request->input('prioridad');
+            $estado = $request->input('estado');
+            $orden = $request->input('orden');
     
             // Filtrar incidencias por sede y opcionalmente por técnico
             $incidencias = Incidencia::with('cliente', 'tecnico', 'gestor', 'subcategoria', 'estado', 'prioridad', 'comentario', 'imagen')
@@ -28,6 +30,14 @@ class GestorController extends Controller
             })
             ->when($prioridad, function ($query) use ($prioridad) {
                 $query->where('prioridades_id', $prioridad);
+            })
+            ->when($estado === 'abiertas', function ($query) {
+                $query->where('estados_id', '!=', 5);
+            })
+            ->when($estado === 'cerradas', function ($query) {
+            })
+            ->when($orden, function ($query) use ($orden) {
+                $query->orderBy('created_at', $orden);
             })
             ->get();
     
