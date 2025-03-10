@@ -10,10 +10,11 @@ return new class extends Migration
     {
         Schema::create('comentarios', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('incidencia_id')->constrained('incidencias');
-            $table->foreignId('usuario_id')->constrained('usuarios');
+            $table->foreignId('incidencias_id')->constrained('incidencias');
+            $table->foreignId('cliente_id')->constrained('usuarios');
+            $table->foreignId('tecnico_id')->constrained('usuarios');
             $table->text('texto');
-            $table->timestamps(0); // created_at, updated_at
+            $table->timestamps(0);
         });
     }
     

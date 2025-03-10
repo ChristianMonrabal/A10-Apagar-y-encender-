@@ -1,98 +1,141 @@
-CREATE DATABASE IF NOT EXISTS JIRA_J23 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE JIRA_J23;
+CREATE DATABASE IF NOT EXISTS jira_j23 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE jira_j23;
 
--- Tabla Sede
-CREATE TABLE sede (
-    id_sede INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_sede VARCHAR(255) NOT NULL
+-- Tabla sedes
+CREATE TABLE sedes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NULL,
+    updated_at TIMESTAMP NULL
 ) ENGINE=InnoDB;
 
--- Tabla Rol
-CREATE TABLE rol (
-    id_rol INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_rol VARCHAR(50) NOT NULL UNIQUE
+-- Tabla roles
+CREATE TABLE roles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL UNIQUE,
+    created_at TIMESTAMP NULL,
+    updated_at TIMESTAMP NULL
 ) ENGINE=InnoDB;
 
--- Tabla Usuario
-CREATE TABLE usuario (
-    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_usuario VARCHAR(50) NOT NULL,
-    email_usuario VARCHAR(50) UNIQUE NOT NULL,
-    password_hash_usuario VARCHAR(255) NOT NULL,
-    id_sede_usuario INT NOT NULL,
-    id_rol_usuario INT NOT NULL,
-    activo_usuario BOOLEAN DEFAULT TRUE,
-    FOREIGN KEY (id_sede_usuario) REFERENCES sede(id_sede),
-    FOREIGN KEY (id_rol_usuario) REFERENCES rol(id_rol)
+-- Tabla usuarios
+CREATE TABLE usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    email VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    sede_id INT NOT NULL,
+    rol_id INT NOT NULL,
+    activo TINYINT(1) DEFAULT 1,
+    created_at TIMESTAMP NULL,
+    updated_at TIMESTAMP NULL,
+    FOREIGN KEY (sede_id) REFERENCES sedes(id),
+    FOREIGN KEY (rol_id) REFERENCES roles(id)
 ) ENGINE=InnoDB;
 
--- Tabla Categoria
-CREATE TABLE categoria (
-    id_categoria INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_categoria VARCHAR(50) NOT NULL UNIQUE
+-- Tabla categorias
+CREATE TABLE categorias (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL UNIQUE,
+    created_at TIMESTAMP NULL,
+    updated_at TIMESTAMP NULL
 ) ENGINE=InnoDB;
 
--- Tabla Subcategoria
-CREATE TABLE subcategoria (
-    id_subcategoria INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_subcategoria VARCHAR(50) NOT NULL,
-    id_categoria_subcategoria INT NOT NULL,
-    FOREIGN KEY (id_categoria_subcategoria) REFERENCES categoria(id_categoria)
+-- Tabla subcategorias
+CREATE TABLE subcategorias (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    categoria_id INT NOT NULL,
+    created_at TIMESTAMP NULL,
+    updated_at TIMESTAMP NULL,
+    FOREIGN KEY (categoria_id) REFERENCES categorias(id)
 ) ENGINE=InnoDB;
 
--- Tabla Estado
-CREATE TABLE estado (
-    id_estado INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_estado VARCHAR(50) NOT NULL UNIQUE
+-- Tabla estados
+CREATE TABLE estados (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL UNIQUE,
+    created_at TIMESTAMP NULL,
+    updated_at TIMESTAMP NULL
 ) ENGINE=InnoDB;
 
--- Tabla Prioridad
-CREATE TABLE prioridad (
-    id_prioridad INT AUTO_INCREMENT PRIMARY KEY,
-    nivel_prioridad VARCHAR(50) NOT NULL UNIQUE
+-- Tabla prioridades
+CREATE TABLE prioridades (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nivel VARCHAR(50) NOT NULL UNIQUE,
+    created_at TIMESTAMP NULL,
+    updated_at TIMESTAMP NULL
 ) ENGINE=InnoDB;
 
--- Tabla Incidencia
-CREATE TABLE incidencia (
-    id_incidencia INT AUTO_INCREMENT PRIMARY KEY,
-    titulo_incidencia VARCHAR(50) NOT NULL,
-    id_cliente_incidencia INT NOT NULL,
-    id_tecnico_incidencia INT DEFAULT NULL,
-    id_gestor_incidencia INT DEFAULT NULL,
-    id_sede_incidencia INT NOT NULL,
-    id_categoria_incidencia INT NOT NULL,
-    id_subcategoria_incidencia INT NOT NULL,
-    descripcion_incidencia TEXT NOT NULL,
-    id_estado_incidencia INT NOT NULL,
-    id_prioridad_incidencia INT DEFAULT NULL,
-    fecha_creacion_incidencia TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    fecha_resolucion_incidencia TIMESTAMP NULL DEFAULT NULL,
-    FOREIGN KEY (id_cliente_incidencia) REFERENCES usuario(id_usuario),
-    FOREIGN KEY (id_tecnico_incidencia) REFERENCES usuario(id_usuario),
-    FOREIGN KEY (id_gestor_incidencia) REFERENCES usuario(id_usuario),
-    FOREIGN KEY (id_sede_incidencia) REFERENCES sede(id_sede),
-    FOREIGN KEY (id_categoria_incidencia) REFERENCES categoria(id_categoria),
-    FOREIGN KEY (id_subcategoria_incidencia) REFERENCES subcategoria(id_subcategoria),
-    FOREIGN KEY (id_estado_incidencia) REFERENCES estado(id_estado),
-    FOREIGN KEY (id_prioridad_incidencia) REFERENCES prioridad(id_prioridad)
+-- Tabla incidencias
+CREATE TABLE incidencias (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(50) NOT NULL,
+    cliente_id INT NOT NULL,
+    tecnico_id INT DEFAULT NULL,
+    gestor_id INT DEFAULT NULL,
+    sede_id INT NOT NULL,
+    categoria_id INT NOT NULL,
+    subcategoria_id INT NOT NULL,
+    descripcion TEXT NOT NULL,
+    estado_id INT NOT NULL,
+    prioridad_id INT DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NULL,
+    fecha_resolucion TIMESTAMP NULL DEFAULT NULL,
+    FOREIGN KEY (cliente_id) REFERENCES usuarios(id),
+    FOREIGN KEY (tecnico_id) REFERENCES usuarios(id),
+    FOREIGN KEY (gestor_id) REFERENCES usuarios(id),
+    FOREIGN KEY (sede_id) REFERENCES sedes(id),
+    FOREIGN KEY (categoria_id) REFERENCES categorias(id),
+    FOREIGN KEY (subcategoria_id) REFERENCES subcategorias(id),
+    FOREIGN KEY (estado_id) REFERENCES estados(id),
+    FOREIGN KEY (prioridad_id) REFERENCES prioridades(id)
 ) ENGINE=InnoDB;
 
--- Tabla Comentario
-CREATE TABLE comentario (
-    id_comentario INT AUTO_INCREMENT PRIMARY KEY,
-    id_incidencia_comentario INT NOT NULL,
-    id_usuario_comentario INT NOT NULL,
-    texto_comentario TEXT NOT NULL,
-    fecha_comentario TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_incidencia_comentario) REFERENCES incidencia(id_incidencia),
-    FOREIGN KEY (id_usuario_comentario) REFERENCES usuario(id_usuario)
+-- Tabla comentarios
+CREATE TABLE comentarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    incidencia_id INT NOT NULL,
+    usuario_id INT NOT NULL,
+    texto TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NULL,
+    FOREIGN KEY (incidencia_id) REFERENCES incidencias(id),
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 ) ENGINE=InnoDB;
 
--- Tabla Imagen
-CREATE TABLE imagen (
-    id_imagen INT AUTO_INCREMENT PRIMARY KEY,
-    id_incidencia_imagen INT NOT NULL,
-    ruta_imagen VARCHAR(200) NOT NULL,
-    fecha_subida_imagen TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_incidencia_imagen) REFERENCES incidencia(id_incidencia)
+-- Tabla imagenes
+CREATE TABLE imagenes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    incidencia_id INT NOT NULL,
+    ruta VARCHAR(200) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NULL,
+    FOREIGN KEY (incidencia_id) REFERENCES incidencias(id)
 ) ENGINE=InnoDB;
+
+
+-- INSERTS SQL
+SELECT * FROM jira_j23.roles;
+SELECT * FROM jira_j23.sedes;
+SELECT * FROM jira_j23.usuarios;
+
+
+USE jira_j23;
+INSERT INTO roles (nombre, created_at, updated_at) VALUES
+('administrador', NOW(), NOW()),
+('cliente', NOW(), NOW()),
+('gestor', NOW(), NOW()),
+('técnico', NOW(), NOW());
+
+INSERT INTO sedes (id, nombre, created_at, updated_at) VALUES
+    (1, 'Barcelona', NOW(), NOW()),
+    (2, 'Berlín', NOW(), NOW()),
+    (3, 'Montreal', NOW(), NOW());
+
+INSERT INTO usuarios (nombre, email, password, sede_id, rol_id, activo, created_at, updated_at) 
+VALUES 
+    ('Juan Pérez', 'juan@empresa.com', '$2y$10$GKcxpoZSFHvaNczs1N0INeJUm.KBnasdtfTO8DtQzvRJM3CSRvxeS', 1, 1, 1, NOW(), NOW()), -- Administrador
+    ('Ana Gómez', 'ana@empresa.com', '$2y$10$GKcxpoZSFHvaNczs1N0INeJUm.KBnasdtfTO8DtQzvRJM3CSRvxeS', 2, 2, 1, NOW(), NOW()), -- Cliente
+    ('Carlos López', 'carlos@empresa.com', '$2y$10$GKcxpoZSFHvaNczs1N0INeJUm.KBnasdtfTO8DtQzvRJM3CSRvxeS', 3, 3, 1, NOW(), NOW()), -- Gestor
+    ('Elena Ruiz', 'elena@empresa.com', '$2y$10$GKcxpoZSFHvaNczs1N0INeJUm.KBnasdtfTO8DtQzvRJM3CSRvxeS', 3, 4, 1, NOW(), NOW()); -- Técnico

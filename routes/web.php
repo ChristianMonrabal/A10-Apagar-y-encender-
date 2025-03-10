@@ -1,12 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TecnicoController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GestorController;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::get('/tecnicos', [TecnicoController::class, 'index'])->name('tecnicos.index');
-Route::post('/tecnicos/{id}/status', [TecnicoController::class, 'updateStatus']);
-// Route::post('/tecnicos/{id}/message', [TecnicoController::class, 'sendMessage']); // Desactivado por el momento
