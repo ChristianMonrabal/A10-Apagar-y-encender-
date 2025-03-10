@@ -13,10 +13,10 @@ return new class extends Migration
             $table->string('nombre');
             $table->string('email')->unique();
             $table->string('password');
-            $table->foreignId('sede_id')->constrained('sedes');
-            $table->foreignId('rol_id')->constrained('roles');
+            $table->foreignId('sedes_id')->constrained('sedes');
+            $table->foreignId('roles_id')->constrained('roles');
             $table->boolean('activo')->default(true);
-            $table->timestamps(0); // created_at, updated_at
+            $table->timestamps(0);
         });
     }
     
