@@ -25,13 +25,7 @@ Route::get('/client', function () {
     }
 })->name('client');
 
-Route::get('/manager', function () {
-    if (Auth::check() && Auth::user()->roles_id === 3) {
-        return view('manager.manager');
-    } else {
-        return redirect('/');
-    }
-})->name('manager');
+Route::get('/manager', [GestorController::class, 'incidencias'])->name('manager');
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
