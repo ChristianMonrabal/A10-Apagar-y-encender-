@@ -34,9 +34,9 @@ class AuthController extends Controller
 
                 switch ($user->roles_id) {
                     case 1:
-                        return redirect('/admin');
-                    case 2: 
                         return redirect('/client');
+                    case 2: 
+                        return redirect('/admin');
                     case 3: 
                         return redirect('/manager');
                     default: 
