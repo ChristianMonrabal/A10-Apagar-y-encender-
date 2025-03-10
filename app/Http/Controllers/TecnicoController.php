@@ -2,62 +2,89 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Incidencia; // Asegúrate de tener el modelo Incidencia creado
+use App\Models\Sede;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Models\Incidencia;
+use Illuminate\Support\Facades\Auth;
 
-class TecnicoController 
+class TecnicoController extends Controller
 {
-    // Muestra las incidències asignades al técnico autenticado
-    public function index()
+    // Muestra el dashboard del técnico
+    public function dashboard()
     {
-        // Operación de lectura: no se requiere transacción
-        $incidences = Incidencia::where('technician_id', auth()->id())->get();
-        return view('tecnicos.incidencies', compact('incidences'));
+        return view('tecnico.dashboard');
     }
 
-    // Actualiza el estado de la incidencia: de "Assignada" a "En treball" o de "En treball" a "Resolta"
-    public function updateStatus(Request $request, $id)
+    // Muestra el listado de incidencias
+    public function incidenciasIndex()
+{
+  
+
+     // Filtra las incidencias para que solo se muestren las asignadas al usuario autenticado
+     $incidencias = Incidencia::with('tecnico')
+     ->where('tecnico_id', Auth::user()->id)
+     ->get();
+
+ return view('tecnico.incidencias.index', compact('incidencias'));
+}
+
+
+
+    // Muestra el formulario para crear una incidencia
+    public function incidenciasCreate()
     {
-        try {
-            DB::beginTransaction();
-
-            $incidence = Incidencia::findOrFail($id);
-            $incidence->status = $request->input('status');
-            $incidence->save();
-
-            DB::commit();
-            return response()->json(['success' => true]);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'error'   => $e->getMessage()
-            ], 500);
-        }
+        return view('tecnico.incidencias.create');
     }
 
-    // Envía un mensaje relacionado con la incidencia al cliente
-    public function sendMessage(Request $request, $id)
+    // Guarda una incidencia nueva
+    public function incidenciasStore(Request $request)
     {
-        try {
-            DB::beginTransaction();
+        $data = $request->validate([
+            'titulo'      => 'required|string|max:50',
+            'descripcion' => 'required',
+            // Agrega validación de otros campos si es necesario
+        ]);
 
-            // Si tienes un modelo Message, podrías guardar el mensaje de la siguiente forma:
-            // Message::create([
-            //     'incidence_id' => $id,
-            //     'content'      => $request->input('message'),
-            //     'sender_id'    => auth()->id(),
-            // ]);
+        Incidencia::create($data);
 
-            DB::commit();
-            return response()->json(['success' => true]);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'error'   => $e->getMessage()
-            ], 500);
-        }
+        return redirect()->route('tecnico.incidencias.index');
+    }
+
+    // Muestra el detalle de una incidencia
+    public function incidenciasShow($id)
+    {
+        $incidencia = Incidencia::findOrFail($id);
+        return view('tecnico.incidencias.show', compact('incidencia'));
+    }
+
+    // Muestra el formulario para editar una incidencia
+    public function incidenciasEdit($id)
+    {
+        $incidencia = Incidencia::findOrFail($id);
+        return view('tecnico.incidencias.edit', compact('incidencia'));
+    }
+
+    // Actualiza una incidencia
+    public function incidenciasUpdate(Request $request, $id)
+    {
+        $incidencia = Incidencia::findOrFail($id);
+        $data = $request->validate([
+            'titulo'      => 'required|string|max:50',
+            'descripcion' => 'required',
+            // Agrega validación de otros campos si es necesario
+        ]);
+
+        $incidencia->update($data);
+
+        return redirect()->route('tecnico.incidencias.index');
+    }
+
+    // Elimina una incidencia
+    public function incidenciasDestroy($id)
+    {
+        $incidencia = Incidencia::findOrFail($id);
+        $incidencia->delete();
+
+        return redirect()->route('tecnico.incidencias.index');
     }
 }
