@@ -40,7 +40,7 @@ class AuthController extends Controller
                     case 3: 
                         return redirect('/manager');
                     case 4: 
-                        return redirect('/technician');
+                        return redirect('/tecnico');
                     default: 
                         return redirect('/');
                 }
