@@ -45,7 +45,11 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+Route::get('/admin', [AdminController::class, 'index'])->name('admin.admin');
 Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create');
 Route::post('/admin/create', [AdminController::class, 'store'])->name('admin.store');
+Route::get('/admin/update/{id}', [AdminController::class, 'edit'])->middleware('auth');
 Route::post('/admin/update/{id}', [AdminController::class, 'update'])->middleware('auth');
-Route::delete('/admin/delete/{id}', [AdminController::class, 'destroy'])->middleware('auth');
+Route::delete('/admin/delete/{id}', [AdminController::class, 'destroy'])->middleware('auth')->name('admin.delete');
+Route::get('/admin/disable/{id}', [AdminController::class, 'disable'])->name('admin.disable');
+Route::get('/admin/enable/{id}', [AdminController::class, 'enable'])->name('admin.enable');
