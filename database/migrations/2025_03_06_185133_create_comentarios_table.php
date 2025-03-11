@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('incidencias_id')->constrained('incidencias');
             $table->foreignId('cliente_id')->constrained('usuarios');
-            $table->foreignId('tecnico_id')->constrained('usuarios');
+            $table->foreignId('tecnico_id')->nullable()->constrained('usuarios');
             $table->text('texto');
             $table->timestamps(0);
         });
