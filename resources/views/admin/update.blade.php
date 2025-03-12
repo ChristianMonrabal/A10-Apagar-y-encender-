@@ -7,26 +7,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Actualizar Usuario</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-custom">
-        <a class="navbar-brand" href="{{ route('admin.admin') }}">Panel de Administración</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <form action="{{ route('logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-danger">Cerrar sesión</button>
-                    </form>
-                </li>
-            </ul>
-        </div>
-    </nav>
-
+    @include('layout.navbar') 
     <div class="container mt-4">
         <h2 class="mb-4">Actualizar Usuario</h2>
 
