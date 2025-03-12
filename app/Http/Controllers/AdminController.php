@@ -14,16 +14,15 @@ class AdminController extends Controller
     public function index()
     {
         if (Auth::check() && Auth::user()->roles_id === 2) {
-
             $usuarios = Usuario::all();
-            
+            $roles = Rol::all();
+            $sedes = Sede::all();
         } else {
             return redirect('/');
         }
     
-        return view('admin.admin', compact('usuarios'));
+        return view('admin.admin', compact('usuarios', 'roles', 'sedes'));
     }
-    
 
     public function create()
     {
