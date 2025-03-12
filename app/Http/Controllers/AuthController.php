@@ -11,8 +11,22 @@ class AuthController extends Controller
 {
     public function showLoginForm()
     {
+        if (Auth::check()) {
+            $user = Auth::user();
+            switch ($user->roles_id) {
+                case 1:
+                    return redirect('/client');
+                case 2:
+                    return redirect('/admin');
+                case 3:
+                    return redirect('/manager');
+                default:
+                    return redirect('/');
+            }
+        }
         return view('auth.login');
     }
+    
 
     public function login(Request $request)
     {
