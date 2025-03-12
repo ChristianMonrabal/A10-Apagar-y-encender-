@@ -1,9 +1,18 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de Incidencias</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome (opcional para iconos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    @include('layout.navbar')
 
-@section('content')
     <div class="container mt-4">
         <h1 class="mb-4 text-center">Listado Completo de Incidencias</h1>
-
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover">
                 <thead class="table-dark">
@@ -43,4 +52,8 @@
             </table>
         </div>
     </div>
-@endsection
+
+    <!-- Bootstrap JS Bundle (incluye Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

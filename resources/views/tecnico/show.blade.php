@@ -1,6 +1,16 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle de la Incidencia</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome (opcional para iconos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    @include('layout.navbar')
 
-@section('content')
     <div class="container mt-4">
         <!-- Título y detalles básicos de la incidencia -->
         <h1 class="mb-4">Detalle de la Incidencia</h1>
@@ -19,9 +29,7 @@
 
         <!-- Sección para mostrar las imágenes -->
         <div class="card mb-4">
-            <div class="card-header">
-                Imágenes
-            </div>
+            <div class="card-header">Imágenes</div>
             <div class="card-body">
                 @if(isset($incidencia->imagenes) && $incidencia->imagenes->count() > 0)
                     <div id="incidenciaCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -49,11 +57,9 @@
 
         <!-- Sección de Chat -->
         <div class="card mb-4">
-            <div class="card-header">
-                Chat con el Cliente
-            </div>
+            <div class="card-header">Chat con el Cliente</div>
             <div class="card-body">
-                <!-- Aquí podrías mostrar los mensajes del chat si los tienes -->
+                <!-- Se muestra la descripción para contextualizar el chat -->
                 <div class="mb-3">
                     <p><strong>Descripción de la Incidencia:</strong></p>
                     <p>{{ $incidencia->descripcion }}</p>
@@ -71,4 +77,8 @@
 
         <a href="{{ route('tecnico.index') }}" class="btn btn-secondary">Volver al listado</a>
     </div>
-@endsection
+
+    <!-- Bootstrap JS Bundle (incluye Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
