@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\GestorController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\TecnicoController;
@@ -21,6 +22,14 @@ Route::get('/admin', function () {
     }
 })->name('admin');
 
+Route::get('/admin/create', function () {
+    if (Auth::check() && Auth::user()->roles_id === 2) {
+        return view('admin.create');
+    } else {
+        return redirect('/');
+    }
+})->name('admin.create');
+
 Route::get('/client', function () {
     if (Auth::check() && Auth::user()->roles_id === 1) {
         // Redirige a la ruta de incidencias para que se ejecute el controlador
@@ -30,13 +39,7 @@ Route::get('/client', function () {
     }
 })->name('client');
 
-Route::get('/manager', function () {
-    if (Auth::check() && Auth::user()->roles_id === 3) {
-        return view('manager.manager');
-    } else {
-        return redirect('/');
-    }
-})->name('manager');
+Route::get('/manager', [GestorController::class, 'incidencias'])->name('manager');
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
@@ -79,3 +82,11 @@ Route::prefix('tecnico')
         Route::put('/incidencias/{id}', [TecnicoController::class, 'incidenciasUpdate'])->name('incidencias.update');
         Route::delete('/incidencias/{id}', [TecnicoController::class, 'incidenciasDestroy'])->name('incidencias.destroy');
 });
+Route::get('/admin', [AdminController::class, 'index'])->name('admin.admin');
+Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create');
+Route::post('/admin/create', [AdminController::class, 'store'])->name('admin.store');
+Route::get('/admin/update/{id}', [AdminController::class, 'edit'])->middleware('auth');
+Route::post('/admin/update/{id}', [AdminController::class, 'update'])->middleware('auth');
+Route::delete('/admin/delete/{id}', [AdminController::class, 'destroy'])->middleware('auth')->name('admin.delete');
+Route::get('/admin/disable/{id}', [AdminController::class, 'disable'])->name('admin.disable');
+Route::get('/admin/enable/{id}', [AdminController::class, 'enable'])->name('admin.enable');
