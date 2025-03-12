@@ -40,17 +40,17 @@
                 <div class="col-md-3 mb-2">
                     <select id="roles_id" name="roles_id" class="form-control">
                         <option value="">Filtrar por rol</option>
-                        <option value="1">Cliente</option>
-                        <option value="2">Administrador</option>
-                        <option value="3">Manager</option>
+                        @foreach($roles as $rol)
+                            <option value="{{ $rol->id }}">{{ $rol->nombre }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="col-md-3 mb-2">
                     <select id="sedes_id" name="sedes_id" class="form-control">
                         <option value="">Filtrar por sede</option>
-                        <option value="1">Barcelona</option>
-                        <option value="2">Berlín</option>
-                        <option value="3">Montreal</option>
+                        @foreach($sedes as $sede)
+                            <option value="{{ $sede->id }}">{{ $sede->nombre }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="col-md-3 mb-2">

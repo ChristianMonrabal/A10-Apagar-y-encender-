@@ -6,17 +6,23 @@ use App\Models\Usuario;
 use App\Models\Rol;
 use App\Models\Sede;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
     public function index()
     {
-        $usuarios = Usuario::all();
+        if (Auth::check() && Auth::user()->roles_id === 2) {
+            $usuarios = Usuario::all();
+            $roles = Rol::all();
+            $sedes = Sede::all();
+        } else {
+            return redirect('/');
+        }
     
-        return view('admin.admin', compact('usuarios'));
+        return view('admin.admin', compact('usuarios', 'roles', 'sedes'));
     }
-    
 
     public function create()
     {
