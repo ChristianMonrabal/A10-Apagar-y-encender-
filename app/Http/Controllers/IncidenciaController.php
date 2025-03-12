@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 class IncidenciaController extends Controller
 {
     /**
-     * Muestra la lista de incidències del cliente, con filtros y orden.
+     * Muestra la lista de incidencias del cliente, con filtros y orden.
      */
     public function index(Request $request)
     {
@@ -26,7 +26,7 @@ class IncidenciaController extends Controller
             $query->where('estados_id', $estadoId);
         }
         if ($hideResolved) {
-            $estadoResuelta = Estado::where('nombre', 'Resolta')->first();
+            $estadoResuelta = Estado::where('nombre', 'Resuelta')->first();
             if ($estadoResuelta) {
                 $query->where('estados_id', '!=', $estadoResuelta->id);
             }
@@ -94,14 +94,14 @@ class IncidenciaController extends Controller
         
         // Guardar imagen si se ha subido
         if ($request->hasFile('imagen')) {
-            $path = $request->file('imagen')->store('incidencies', 'public');
+            $path = $request->file('imagen')->store('incidencias', 'public');
             $incidencia->imagen()->create([
                 'ruta' => $path,
             ]);
         }
         
         return redirect()->route('incidencias.index')
-                         ->with('success', 'Incidència registrada correctament.');
+                         ->with('success', 'Incidencia registrada correctamente.');
     }
     
     /**
@@ -141,6 +141,6 @@ class IncidenciaController extends Controller
             ]);
         }
 
-        return redirect()->route('incidencias.show', $id)->with('success', 'Comentari afegit.');
+        return redirect()->route('incidencias.show', $id)->with('success', 'Comentario añadido.');
     }
 }
