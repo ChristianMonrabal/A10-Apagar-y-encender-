@@ -1,7 +1,10 @@
+/* Navbar personalizada */
 .navbar-custom {
     background-color: #172B4D;
     color: white;
 }
+
+/* Color del texto y los enlaces en la navbar */
 .navbar-custom .navbar-brand,
 .navbar-custom .navbar-nav .nav-link {
     color: white;
@@ -10,6 +13,32 @@
     color: white !important;
 }
 
+/* Estilo del logo */
 img {
     height: 40px;
+}
+
+/* Estilo del botón de "Crear Usuario" */
+.navbar-custom .btn-outline-light {
+    border-color: #ffffff; /* Borde blanco */
+    color: #ffffff; /* Texto blanco */
+    background-color: transparent; /* Fondo transparente */
+}
+
+.navbar-custom .btn-outline-light:hover {
+    background-color: #ffffff; /* Fondo blanco al pasar el ratón */
+    color: #172B4D; /* Texto oscuro cuando el fondo es blanco */
+    border-color: #ffffff; /* Mantiene el borde blanco */
+}
+
+.navbar-custom .btn-outline-light:focus {
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25); /* Efecto de foco */
+}
+
+/* Botón "Crear Usuario" en dispositivos móviles */
+@media (max-width: 767px) {
+    .navbar-custom .btn-outline-light {
+        font-size: 14px; /* Ajusta el tamaño del texto en móviles */
+        padding: 5px 10px; /* Ajusta el tamaño del botón */
+    }
 }
