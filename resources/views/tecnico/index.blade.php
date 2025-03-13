@@ -14,6 +14,19 @@
 
     <div class="container mt-4">
         <h1 class="mb-4 text-center">Listado Completo de Incidencias</h1>
+        
+        <!-- Campo de búsqueda -->
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <input 
+                    type="text" 
+                    id="search" 
+                    class="form-control" 
+                    placeholder="Buscar incidencia por título o descripción..."
+                >
+            </div>
+        </div>
+
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover">
                 <thead class="table-dark">
@@ -28,7 +41,8 @@
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody>
+                <!-- Importante: le damos un id al tbody para reemplazar su contenido mediante AJAX -->
+                <tbody id="incidencias-tbody">
                     @foreach($incidencias as $incidencia)
                         <tr>
                             <td>{{ $incidencia->titulo }}</td>
@@ -61,7 +75,6 @@
                                     </form>
                                 @endif
                             </td>
-                            
                         </tr>
                     @endforeach
                 </tbody>
@@ -71,5 +84,28 @@
 
     <!-- Bootstrap JS Bundle (incluye Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Script para filtrar con fetch -->
+    <script>
+        const searchInput = document.getElementById('search');
+        const tbody = document.getElementById('incidencias-tbody');
+
+        // Detectamos cuando el usuario escribe
+        searchInput.addEventListener('keyup', function() {
+            let query = this.value; // texto que se está escribiendo
+
+            // Realizamos una petición GET a la ruta de filtro, por ej /tecnico/incidencias/filter
+            // Asegúrate de tener la ruta en routes/web.php y un método en tu controlador
+            fetch("{{ route('tecnico.filter') }}?search=" + encodeURIComponent(query))
+                .then(response => response.text())
+                .then(html => {
+                    // Reemplazamos el contenido del tbody con el HTML parcial que nos regresa el servidor
+                    tbody.innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Error en fetch:', error);
+                });
+        });
+    </script>
 </body>
 </html>

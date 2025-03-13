@@ -61,44 +61,50 @@
             </div>
         </div>
 
-        <!-- Sección de Chat -->
-        <div class="card mb-4">
-            <div class="card-header">Chat con el Cliente</div>
-            <div class="card-body">
-                <!-- Mostrar el historial de mensajes -->
-                <div class="mb-3">
-                    <h5>Mensajes</h5>
-                    @forelse($incidencia->comentario as $comentario)
-                        <div class="mb-2">
-                            <strong>
-                                @if($comentario->tecnico_id)
-                                    Técnico: {{ optional($comentario->tecnico)->nombre }}
-                                @elseif($comentario->cliente_id)
-                                    Cliente: {{ optional($comentario->cliente)->nombre }}
-                                @else
-                                    Desconocido
-                                @endif
-                            :</strong>
-                            <p class="mb-0">{{ $comentario->texto }}</p>
-                            <small class="text-muted">{{ $comentario->created_at->format('d-m-Y H:i') }}</small>
-                        </div>
-                    @empty
-                        <p class="text-muted">No hay mensajes en el chat.</p>
-                    @endforelse
-                </div>
-                <!-- Formulario para enviar un mensaje -->
-                <form action="{{ route('tecnico.storeComentario', $incidencia->id) }}" method="POST">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="texto" class="form-label">Escribe tu mensaje</label>
-                        <textarea class="form-control" id="texto" name="texto" rows="3" placeholder="Ingresa tu mensaje aquí..."></textarea>
+  <!-- Muestra el chat -->
+<div>
+    <h4>Chat:</h4>
+    <div class="chat-box mb-3" style="border: 1px solid #ccc; padding: 10px; height:300px; overflow-y: auto;">
+        @foreach($incidencia->comentario as $comentario)
+            @if($comentario->cliente)
+                <!-- Mensaje del cliente: se alinea a la derecha -->
+                <div class="d-flex justify-content-end mb-2">
+                    <div class="p-2 bg-primary text-white rounded" style="max-width:70%;">
+                        <small class="d-block text-right"><strong>{{ $comentario->cliente->nombre }} (Cliente)</strong></small>
+                        <span>{{ $comentario->texto }}</span>
                     </div>
-                    <button type="submit" class="btn btn-primary">Enviar</button>
-                </form>
-            </div>
-        </div>
-        
+                </div>
+            @elseif($comentario->tecnico)
+                <!-- Mensaje del técnico: se alinea a la izquierda -->
+                <div class="d-flex justify-content-start mb-2">
+                    <div class="p-2 bg-light border rounded" style="max-width:70%;">
+                        <small class="d-block"><strong>{{ $comentario->tecnico->nombre }} (Técnico)</strong></small>
+                        <span>{{ $comentario->texto }}</span>
+                    </div>
+                </div>
+            @else
+                <!-- Mensaje de usuario desconocido -->
+                <div class="mb-2">
+                    <strong>Usuario desconocido:</strong> {{ $comentario->texto }}
+                </div>
+            @endif
+        @endforeach
     </div>
+
+    <!-- Formulario para enviar un nuevo comentario -->
+    <form action="{{ route('tecnico.storeComentario', $incidencia->id) }}" method="POST">
+        @csrf
+        <div class="form-group">
+            <!-- Importante: el name del textarea debe coincidir con lo que validas en el controlador -->
+            <textarea name="texto" rows="3" class="form-control" placeholder="Escribe un comentario..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+</div>
+
+<!-- Botón para volver a la lista -->
+<a href="{{ route('tecnico.index') }}" class="btn btn-secondary mt-3">Volver a la lista</a>
+
 
     <!-- Bootstrap JS Bundle (incluye Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

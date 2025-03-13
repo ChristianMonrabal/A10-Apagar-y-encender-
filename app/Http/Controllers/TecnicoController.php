@@ -103,4 +103,25 @@ class TecnicoController extends Controller
 
         return redirect()->back()->with('error', 'La incidencia no se encuentra en estado "En trabajo".');
     }
+    public function filterIncidencias(Request $request)
+{
+    $search = $request->input('search'); // El valor que mandaremos desde AJAX
+    // También podrías tener otros filtros: estado, prioridad, fechas, etc.
+
+    // Construyes la query de filtrado:
+    $query = Incidencia::with(['cliente', 'tecnico', 'estado', 'prioridad']);
+
+    if (!empty($search)) {
+        $query->where('titulo', 'LIKE', "%{$search}%")
+              ->orWhere('descripcion', 'LIKE', "%{$search}%");
+    }
+
+    // Obtienes las incidencias filtradas
+    $incidencias = $query->get();
+
+    // Retornamos una vista parcial que solo contenga <tr> de la tabla:
+    // (Puedes llamarla "tecnico.partials.incidencias-filtradas" por ejemplo)
+    return view('tecnico.partials.incidencias-filtradas', compact('incidencias'));
+}
+
 }
