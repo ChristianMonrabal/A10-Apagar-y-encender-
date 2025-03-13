@@ -2,10 +2,11 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listado de Incidencias</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome (opcional para iconos) -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -35,17 +36,32 @@
                             <td>{{ optional($incidencia->cliente)->nombre }}</td>
                             <td>{{ optional($incidencia->tecnico)->nombre }}</td>
                             <td>
-                                <span class="badge bg-primary">{{ optional($incidencia->estado)->nombre }}</span>
+                                <span class="badge bg-primary">
+                                    {{ optional($incidencia->estado)->nombre }}
+                                </span>
                             </td>
                             <td>
-                                <span class="badge bg-warning text-dark">{{ optional($incidencia->prioridad)->nivel }}</span>
+                                <span class="badge bg-warning text-dark">
+                                    {{ optional($incidencia->prioridad)->nivel }}
+                                </span>
                             </td>
-                            <td>{{ $incidencia->fecha_resolucion ? $incidencia->fecha_resolucion->format('d-m-Y') : 'Pendiente' }}</td>
                             <td>
-                                <a href="{{ route('tecnico.show', $incidencia->id) }}" class="btn btn-info btn-sm">
+                                {{ $incidencia->fecha_resolucion ? $incidencia->fecha_resolucion->format('d-m-Y') : 'Pendiente' }}
+                            </td>
+                            <td>
+                                <a href="{{ route('tecnico.show', $incidencia->id) }}" class="btn btn-info btn-sm" style="padding: 0.25rem 0.4rem; font-size: 0.75rem;">
                                     <i class="fas fa-eye"></i> Ver
                                 </a>
+                                @if(optional($incidencia->estado)->nombre == 'Asignada')
+                                    <form action="{{ route('tecnico.iniciarTrabajo', $incidencia->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success btn-sm" style="padding: 0.25rem 0.4rem; font-size: 0.75rem;">
+                                            <i class="fas fa-play"></i> Iniciar
+                                        </button>
+                                    </form>
+                                @endif
                             </td>
+                            
                         </tr>
                     @endforeach
                 </tbody>

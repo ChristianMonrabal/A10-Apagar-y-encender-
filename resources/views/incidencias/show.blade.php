@@ -14,6 +14,7 @@
             <p><strong>Categoría:</strong> {{ $incidencia->categoria->nombre ?? 'Sin categoría' }}</p>
             <p><strong>Subcategoría:</strong> {{ $incidencia->subcategoria->nombre ?? 'Sin subcategoría' }}</p>
             <p><strong>Fecha de alta:</strong> {{ $incidencia->created_at->format('d/m/Y H:i') }}</p>
+        
             
             @if($incidencia->imagen->count() > 0)
                 <div>

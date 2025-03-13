@@ -75,13 +75,20 @@ Route::get('/categorias/{id}/subcategorias', function($id) {
 
 
 // Dashboard del técnico
-Route::get('/tecnico', [TecnicoController::class, 'dashboard'])->name('tecnico.index');
+// Route::get('/tecnico', [TecnicoController::class, 'dashboard'])->name('tecnico.index');
 
 // Rutas para la gestión de incidencias del técnico
 Route::get('/tecnico', [TecnicoController::class, 'tecnicoIndex'])->name('tecnico.index');
 Route::post('/tecnico', [TecnicoController::class, 'tecnicoStore'])->name('tecnico.store');
 Route::get('/tecnico/{id}', [TecnicoController::class, 'tecnicoShow'])->name('tecnico.show');
 Route::delete('/tecnico/{id}', [TecnicoController::class, 'tecnicoDestroy'])->name('tecnico.destroy');
+Route::post('/tecnico/{id}/comentario', [TecnicoController::class, 'storeComentario'])
+    ->name('tecnico.storeComentario');
+Route::post('/tecnico/{id}/iniciar-trabajo', [TecnicoController::class, 'iniciarTrabajo'])
+    ->name('tecnico.iniciarTrabajo');
+Route::post('/tecnico/{id}/finalizar-trabajo', [TecnicoController::class, 'finalizarTrabajo'])
+    ->name('tecnico.finalizarTrabajo');
+
 
 
 

@@ -6,6 +6,9 @@
 .navbar-custom .navbar-nav .nav-link {
     color: white;
 }
+.navbar-text{
+    color: white !important;
+}
 
 img {
     height: 40px;
