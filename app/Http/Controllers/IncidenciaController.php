@@ -94,12 +94,21 @@ class IncidenciaController extends Controller
         
         // Guardar imagen si se ha subido
         if ($request->hasFile('imagen')) {
-            $path = $request->file('imagen')->store('incidencias', 'public');
+            $file = $request->file('imagen');
+            // Genera un nombre hash similar a store()
+            $filename = $file->hashName();
+            // Define la ruta destino en public/img/incidencias
+            $destinationPath = public_path('img/incidencias');
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+            // Mueve el archivo a la ruta deseada
+            $file->move($destinationPath, $filename);
+            // Guarda la ruta relativa en la base de datos
             $incidencia->imagen()->create([
-                'ruta' => $path,
+                'ruta' => 'img/incidencias/' . $filename,
             ]);
-        }
-        
+        }   
         return redirect()->route('incidencias.index')
                          ->with('success', 'Incidencia registrada correctamente.');
     }
@@ -143,4 +152,38 @@ class IncidenciaController extends Controller
 
         return redirect()->route('incidencias.show', $id)->with('success', 'Comentario añadido.');
     }
+
+    /**
+     * Cambia el estado de la incidencia de "Resuelta" a "Cerrada".
+     */
+    public function close(Request $request, $id)
+    {
+        $user = Auth::user();
+        $incidencia = Incidencia::findOrFail($id);
+
+        // Verifica que la incidencia pertenezca al usuario actual
+        if ($incidencia->cliente_id != $user->id) {
+            abort(403, 'No tienes permiso para cerrar esta incidencia.');
+        }
+        
+        // Verifica que la incidencia esté en estado "Resuelta"
+        if ($incidencia->estado->nombre !== 'Resuelta') {
+            return redirect()->route('incidencias.show', $id)
+                            ->with('error', 'La incidencia no se encuentra en estado "Resuelta".');
+        }
+        
+        // Buscar el estado "Cerrada"
+        $estadoCerrada = Estado::where('nombre', 'Cerrada')->first();
+        if (!$estadoCerrada) {
+            return redirect()->route('incidencias.show', $id)
+                            ->with('error', 'Estado "Cerrada" no encontrado.');
+        }
+        
+        // Actualiza el estado de la incidencia a "Cerrada"
+        $incidencia->estados_id = $estadoCerrada->id;
+        $incidencia->save();
+
+    return redirect()->route('incidencias.show', $id)
+                     ->with('success', 'Incidencia cerrada correctamente.');
+}
 }
