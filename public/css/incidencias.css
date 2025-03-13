@@ -5,3 +5,43 @@
     transform: translateY(-5px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
+
+.badge-info {
+    background-color: #172B4D !important;
+    color: white !important;
+}
+
+.boton-custom {
+    border-color: #172B4D !important;
+    color: #172B4D !important;
+}
+
+.boton-custom:hover {
+    background-color: #172B4D !important;
+    color: white !important;
+}
+
+.badge-sin-asignar {
+    background-color: #6c757d !important; /* Gris */
+    color: white !important;
+}
+
+.badge-asignada {
+    background-color: #007bff !important; /* Azul */
+    color: white !important;
+}
+
+.badge-en-trabajo {
+    background-color: #FFC107 !important; /* Amarillo */
+    color: rgb(255, 255, 255) !important;
+}
+
+.badge-resuelta {
+    background-color: #28A745 !important; /* Verde */
+    color: white !important;
+}
+
+.badge-cerrada {
+    background-color: #DC3545 !important; /* Rojo */
+    color: white !important;
+}
