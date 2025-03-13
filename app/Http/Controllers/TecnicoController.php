@@ -43,21 +43,18 @@ class TecnicoController extends Controller
         $data = $request->validate([
             'texto' => 'required|string'
         ]);
-
+    
         $user = Auth::user();
         $data['incidencias_id'] = $incidenciaId;
-        // Según el rol, se asigna el comentario al técnico (rol 4) o al cliente (rol 1, u otro)
-        if ($user->rol_id == 4) { // Suponiendo que el rol 4 corresponde al técnico
-            $data['tecnico_id'] = $user->id;
-        } else {
-            $data['cliente_id'] = $user->id;
-        }
         
-
+        // Siempre se asigna como técnico (ignoras por completo el rol)
+        $data['tecnico_id'] = $user->id;
+    
         Comentario::create($data);
-
+    
         return redirect()->back()->with('success', 'Mensaje enviado correctamente.');
     }
+    
 
     public function iniciarTrabajo($id)
     {
