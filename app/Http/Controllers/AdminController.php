@@ -10,6 +10,7 @@ use App\Models\Subcategoria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -168,16 +169,34 @@ class AdminController extends Controller
 }
 
 
-    public function destroy($id)
-    {
+public function destroy($id)
+{
+    DB::beginTransaction(); 
+
+    try {
         $usuario = Usuario::findOrFail($id);
-    
+
+        $usuario->incidencia_cliente()->each(function ($incidencia) {
+            $incidencia->comentario()->delete();
+            $incidencia->imagen()->delete();
+        });
+        
+        $usuario->incidencia_cliente()->delete();
+        $usuario->incidencia_tecnico()->delete();
+        $usuario->incidencia_gestor()->delete();
+
         if ($usuario->delete()) {
+            DB::commit(); 
             return redirect()->route('admin.admin')->with('success', 'Usuario eliminado exitosamente.');
         } else {
-            return redirect()->route('admin.admin')->with('error', 'Hubo un error al eliminar el usuario.');
+            throw new \Exception("Hubo un error al eliminar el usuario.");
         }
+    } catch (\Exception $e) {
+        DB::rollBack(); 
+
+        return redirect()->route('admin.admin')->with('error', 'Hubo un error al eliminar el usuario. ' . $e->getMessage());
     }
+}
 
     public function disable($id)
 {
