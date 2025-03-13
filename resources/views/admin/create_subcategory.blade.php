@@ -50,4 +50,4 @@
     </form>
 </div>
 
-<script src="{{ asset('js/subcategorias.js') }}"></script>
+<script src="{{ asset('js/create_subcategorias.js') }}"></script>
