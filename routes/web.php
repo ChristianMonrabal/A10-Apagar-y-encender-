@@ -32,7 +32,6 @@ Route::get('/admin/create', function () {
 
 Route::get('/client', function () {
     if (Auth::check() && Auth::user()->roles_id === 1) {
-        // Redirige a la ruta de incidencias para que se ejecute el controlador
         return redirect()->route('incidencias.index');
     } else {
         return redirect('/');
@@ -45,7 +44,6 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Rutas protegidas (se asume que se usa el middleware de autenticación)
 Route::middleware(['auth'])->group(function () {
     Route::get('/incidencias', [IncidenciaController::class, 'index'])->name('incidencias.index');
     Route::get('/incidencias/create', [IncidenciaController::class, 'create'])->name('incidencias.create');
@@ -55,13 +53,11 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/incidencias/{id}/close', [IncidenciaController::class, 'close'])->name('incidencias.close');
 });
 Route::get('/categorias/{id}/subcategorias', function($id) {
-    // Se asume que la tabla subcategorias tiene una columna 'categorias_id'
     $subcategorias = Subcategoria::where('categorias_id', $id)->get();
     return response()->json($subcategorias);
 })->name('categorias.subcategorias');
 
 Route::get('/tecnico', function () {
-    // Verifica que el usuario esté autenticado y tenga rol_id igual a 4 (técnico)
     if (Auth::check() && Auth::user()->rol_id === 4) {
         return redirect()->route('tecnico.home');
     }
@@ -71,10 +67,8 @@ Route::get('/tecnico', function () {
 Route::prefix('tecnico')
     ->name('tecnico.')
     ->group(function () {
-        // Dashboard del técnico
         Route::get('/', [TecnicoController::class, 'dashboard'])->name('home');
 
-        // Rutas para la gestión de incidencias
         Route::get('/incidencias', [TecnicoController::class, 'incidenciasIndex'])->name('incidencias.index');
         Route::get('/incidencias/create', [TecnicoController::class, 'incidenciasCreate'])->name('incidencias.create');
         Route::post('/incidencias', [TecnicoController::class, 'incidenciasStore'])->name('incidencias.store');
