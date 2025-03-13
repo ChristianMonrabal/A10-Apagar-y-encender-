@@ -2,89 +2,126 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Incidencia; // Asegúrate de tener el modelo Incidencia creado
-use App\Models\Sede;
+use App\Models\Incidencia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Comentario;
+use App\Models\Estado;
 
 class TecnicoController extends Controller
 {
-    // Muestra el dashboard del técnico
     public function dashboard()
     {
-        return view('tecnico.dashboard');
+        return view('tecnico.index');
     }
 
-    // Muestra el listado de incidencias
-    public function incidenciasIndex()
+    public function tecnicoIndex()
+    {
+        $user = Auth::user(); // Obtener el usuario autenticado
+        $incidencias = Incidencia::where('tecnico_id', $user->id)->get();
+        return view('tecnico.index', compact('incidencias'));
+    }
+
+    public function tecnicoShow($id)
+    {
+        $incidencia = Incidencia::with([
+            'cliente',
+            'tecnico',
+            'estado',
+            'prioridad',
+            'imagen',
+            'comentario' // Relación que debe estar definida en el modelo Incidencia
+        ])->findOrFail($id);
+
+        return view('tecnico.show', compact('incidencia'));
+    }
+
+    // Almacena un comentario (mensaje) para la incidencia
+    public function storeComentario(Request $request, $incidenciaId)
+    {
+        // Validamos que se envíe un mensaje
+        $data = $request->validate([
+            'texto' => 'required|string'
+        ]);
+    
+        $user = Auth::user();
+        $data['incidencias_id'] = $incidenciaId;
+        
+        // Siempre se asigna como técnico (ignoras por completo el rol)
+        $data['tecnico_id'] = $user->id;
+    
+        Comentario::create($data);
+    
+        return redirect()->back()->with('success', 'Mensaje enviado correctamente.');
+    }
+    
+
+    public function iniciarTrabajo($id)
+    {
+        // Buscar la incidencia o retornar error 404 si no existe
+        $incidencia = Incidencia::findOrFail($id);
+
+        // Verificar que la incidencia esté en estado "Asignada"
+        if (optional($incidencia->estado)->nombre === 'Asignada') {
+            // Buscar el registro del estado "En trabajo"
+            $estadoEnTrabajo = Estado::where('nombre', 'En trabajo')->first();
+
+            if ($estadoEnTrabajo) {
+                // Actualizar la incidencia
+                $incidencia->estados_id = $estadoEnTrabajo->id;
+                $incidencia->save();
+
+                return redirect()->back()->with('success', 'La incidencia se ha actualizado a "En trabajo".');
+            } else {
+                return redirect()->back()->with('error', 'No se encontró el estado "En trabajo".');
+            }
+        }
+
+        return redirect()->back()->with('error', 'La incidencia no se encuentra en estado "Asignada".');
+    }
+
+    public function finalizarTrabajo($id)
+    {
+        // Buscar la incidencia o retornar error 404 si no existe
+        $incidencia = Incidencia::findOrFail($id);
+
+        // Verificar que la incidencia esté en estado "En trabajo"
+        if (optional($incidencia->estado)->nombre === 'En trabajo') {
+            // Buscar el registro del estado "Finalizada"
+            $estadoFinalizada = Estado::where('nombre', 'Resuelta')->first();
+
+            if ($estadoFinalizada) {
+                // Actualizar la incidencia
+                $incidencia->estados_id = $estadoFinalizada->id;
+                $incidencia->save();
+
+                return redirect()->back()->with('success', 'La incidencia se ha actualizado a "Finalizada".');
+            } else {
+                return redirect()->back()->with('error', 'No se encontró el estado "Finalizada".');
+            }
+        }
+
+        return redirect()->back()->with('error', 'La incidencia no se encuentra en estado "En trabajo".');
+    }
+    public function filterIncidencias(Request $request)
 {
-  
+    $search = $request->input('search'); // El valor que mandaremos desde AJAX
+    // También podrías tener otros filtros: estado, prioridad, fechas, etc.
 
-     // Filtra las incidencias para que solo se muestren las asignadas al usuario autenticado
-     $incidencias = Incidencia::with('tecnico')
-     ->where('tecnico_id', Auth::user()->id)
-     ->get();
+    // Construyes la query de filtrado:
+    $query = Incidencia::with(['cliente', 'tecnico', 'estado', 'prioridad']);
 
- return view('tecnico.incidencias.index', compact('incidencias'));
+    if (!empty($search)) {
+        $query->where('titulo', 'LIKE', "%{$search}%")
+              ->orWhere('descripcion', 'LIKE', "%{$search}%");
+    }
+
+    // Obtienes las incidencias filtradas
+    $incidencias = $query->get();
+
+    // Retornamos una vista parcial que solo contenga <tr> de la tabla:
+    // (Puedes llamarla "tecnico.partials.incidencias-filtradas" por ejemplo)
+    return view('tecnico.partials.incidencias-filtradas', compact('incidencias'));
 }
 
-
-
-    // Muestra el formulario para crear una incidencia
-    public function incidenciasCreate()
-    {
-        return view('tecnico.incidencias.create');
-    }
-
-    // Guarda una incidencia nueva
-    public function incidenciasStore(Request $request)
-    {
-        $data = $request->validate([
-            'titulo'      => 'required|string|max:50',
-            'descripcion' => 'required',
-            // Agrega validación de otros campos si es necesario
-        ]);
-
-        Incidencia::create($data);
-
-        return redirect()->route('tecnico.incidencias.index');
-    }
-
-    // Muestra el detalle de una incidencia
-    public function incidenciasShow($id)
-    {
-        $incidencia = Incidencia::findOrFail($id);
-        return view('tecnico.incidencias.show', compact('incidencia'));
-    }
-
-    // Muestra el formulario para editar una incidencia
-    public function incidenciasEdit($id)
-    {
-        $incidencia = Incidencia::findOrFail($id);
-        return view('tecnico.incidencias.edit', compact('incidencia'));
-    }
-
-    // Actualiza una incidencia
-    public function incidenciasUpdate(Request $request, $id)
-    {
-        $incidencia = Incidencia::findOrFail($id);
-        $data = $request->validate([
-            'titulo'      => 'required|string|max:50',
-            'descripcion' => 'required',
-            // Agrega validación de otros campos si es necesario
-        ]);
-
-        $incidencia->update($data);
-
-        return redirect()->route('tecnico.incidencias.index');
-    }
-
-    // Elimina una incidencia
-    public function incidenciasDestroy($id)
-    {
-        $incidencia = Incidencia::findOrFail($id);
-        $incidencia->delete();
-
-        return redirect()->route('tecnico.incidencias.index');
-    }
 }
