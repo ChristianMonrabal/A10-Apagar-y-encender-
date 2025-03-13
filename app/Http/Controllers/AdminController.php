@@ -11,17 +11,48 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        if (Auth::check() && Auth::user()->roles_id === 2) {
-            $usuarios = Usuario::all();
-            $roles = Rol::all();
-            $sedes = Sede::all();
-        } else {
+        if (!Auth::check() || Auth::user()->roles_id !== 2) {
             return redirect('/');
         }
     
-        return view('admin.admin', compact('usuarios', 'roles', 'sedes'));
+        $nombre = $request->input('nombre');
+        $roles_id = $request->input('roles_id');
+        $sedes_id = $request->input('sedes_id');
+        $activo = $request->input('activo');
+    
+        $query = Usuario::query();
+    
+        if (!empty($nombre)) {
+            $query->where('nombre', 'like', "%$nombre%");
+        }
+        if (!empty($roles_id)) {
+            $query->where('roles_id', $roles_id);
+        }
+        if (!empty($sedes_id)) {
+            $query->where('sedes_id', $sedes_id);
+        }
+        if ($activo !== null && $activo !== '') {
+            $query->where('activo', $activo);
+        }
+    
+        $usuarios = $query->get();
+        $roles = Rol::all();
+        $sedes = Sede::all();
+    
+        $estados = Usuario::select('activo')
+                        ->distinct()
+                        ->get()
+                        ->pluck('activo', 'activo')
+                        ->toArray();
+    
+        $estados = [
+            '1' => 'Activo',
+            '0' => 'Desactivado',
+        ];
+    
+        return view('admin.admin', compact('usuarios', 'roles', 'sedes', 'estados'));
     }
 
     public function create()

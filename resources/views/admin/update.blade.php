@@ -7,12 +7,15 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Actualizar Usuario</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
-    @include('layout.navbar') 
+    @include('layout.navbar')
     <div class="container mt-4">
-        <h2 class="mb-4">Actualizar Usuario</h2>
-
+        <a href="{{ route('admin.admin') }}" class="btn btn-secondary mr-2">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <h2 class="mb-4">Editar usuario {{ $usuario->nombre }}</h2>
         <form action="{{ url('/admin/update/' . $usuario->id) }}" method="POST">
             @csrf
             <div class="form-group">
@@ -63,7 +66,7 @@
             @elseif (session('error'))
                 <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
-            <button type="submit" class="btn btn-primary">Actualizar Usuario</button>
+            <button type="submit" class="btn btn-primary">Actualizar usuario</button>
         </form>
     </div>
 

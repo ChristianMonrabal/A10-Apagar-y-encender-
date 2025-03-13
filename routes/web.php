@@ -84,7 +84,7 @@ Route::prefix('tecnico')
         Route::delete('/incidencias/{id}', [TecnicoController::class, 'incidenciasDestroy'])->name('incidencias.destroy');
 });
 Route::get('/admin', [AdminController::class, 'index'])->name('admin.admin');
-Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create');
+Route::get('/admin/create', [AdminController::class, 'create'])->middleware('auth')->name('admin.create');
 Route::post('/admin/create', [AdminController::class, 'store'])->name('admin.store');
 Route::get('/admin/update/{id}', [AdminController::class, 'edit'])->middleware('auth');
 Route::post('/admin/update/{id}', [AdminController::class, 'update'])->middleware('auth');
