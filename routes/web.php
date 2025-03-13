@@ -52,6 +52,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/incidencias', [IncidenciaController::class, 'store'])->name('incidencias.store');
     Route::get('/incidencias/{id}', [IncidenciaController::class, 'show'])->name('incidencias.show');
     Route::post('/incidencias/{id}/comentarios', [IncidenciaController::class, 'addComment'])->name('incidencias.addComment');
+    Route::patch('/incidencias/{id}/close', [IncidenciaController::class, 'close'])->name('incidencias.close');
 });
 Route::get('/categorias/{id}/subcategorias', function($id) {
     // Se asume que la tabla subcategorias tiene una columna 'categorias_id'

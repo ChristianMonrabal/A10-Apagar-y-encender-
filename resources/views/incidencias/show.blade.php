@@ -6,7 +6,16 @@
     
     <div class="card">
         <div class="card-header">
-            <h2>{{ $incidencia->titulo }}</h2>
+            <h2 class="d-flex justify-content-between align-items-center">
+                <span>{{ $incidencia->titulo }}</span>
+                @if($incidencia->estado->nombre === 'Resuelta')
+                    <form action="{{ route('incidencias.close', $incidencia->id) }}" method="POST" class="d-inline">
+                        @csrf
+                        @method('PATCH')
+                        <button type="button" class="btn btn-danger btn-sm btn-close-incidencia">Cerrar Incidencia</button>
+                    </form>
+                @endif
+            </h2>
         </div>
         <div class="card-body">
             <p><strong>Descripción:</strong> {{ $incidencia->descripcion }}</p>
@@ -19,7 +28,8 @@
                 <div>
                     <h4>Imagen(es):</h4>
                     @foreach($incidencia->imagen as $img)
-                        <img src="{{ asset('storage/' . $img->ruta) }}" alt="Incidencia Imagen" class="img-fluid mb-2" style="max-width:200px;">
+                        <!-- Añadimos la clase clickable-image y cursor pointer -->
+                        <img src="{{ asset($img->ruta) }}" alt="Incidencia Imagen" class="img-fluid mb-2 clickable-image" style="max-width:200px; cursor:pointer;">
                     @endforeach
                 </div>
             @endif
@@ -53,8 +63,29 @@
             
         </div>
     </div>
-    
+
     <a href="{{ route('incidencias.index') }}" class="btn btn-secondary mt-3">Volver a la lista</a>
 </div>
 <br>
+<!-- Modal para imagen ampliada -->
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body p-0">
+        <img src="" class="img-fluid" id="enlargedImage" alt="Imagen ampliada">
+      </div>
+      <div class="modal-footer">
+         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+@endsection
+
+@section('scripts')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="{{ asset('js/image-modal.js') }}"></script>
 @endsection
