@@ -39,7 +39,11 @@ Route::get('/client', function () {
     }
 })->name('client');
 
-Route::get('/manager', [GestorController::class, 'incidencias'])->name('manager');
+Route::controller(GestorController::class)->group(function () {
+    Route::get('/manager', 'incidencias')->name('manager');
+    Route::patch('/incidencias/{id}/tecnico', 'actualizarTecnico')->name('actualizarTecnico');
+    Route::patch('/incidencias/{id}/prioridad', 'actualizarPrioridad')->name('actualizarPrioridad');
+});
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
