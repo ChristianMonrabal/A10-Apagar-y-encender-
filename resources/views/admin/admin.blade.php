@@ -13,10 +13,11 @@
     @include('layout.navbar') 
     <div class="container mt-4">
         <h2 class="mb-4">Panel de usuarios</h2>
-        <a href="{{ route('admin.create') }}" class="btn btn-primary mb-4">Crear Usuario</a>
+        <a href="{{ route('admin.create') }}" class="btn btn-primary mb-4">Crear usuario</a>
+        <a href="{{ route('admin.create.category') }}" class="btn btn-primary mb-4">Crear categoría</a>
+        <a href="{{ route('admin.create.subcategory') }}" class="btn btn-primary mb-4">Crear subcategoria</a>
         <form id="filter-form" class="mb-4" method="GET" action="{{ route('admin.admin') }}">
             <div class="form-row align-items-center">
-                <!-- Input de nombre -->
                 <div class="col-md-3 mb-2 position-relative">
                     <input type="text" id="nombre" name="nombre" class="form-control pr-5" placeholder="Buscar por nombre" 
                         value="{{ request('nombre') }}">
@@ -24,7 +25,6 @@
                         style="top: 50%; right: 10px; transform: translateY(-50%); cursor: pointer;"></i>
                 </div>
         
-                <!-- Select de Rol -->
                 <div class="col-md-3 mb-2">
                     <select id="roles_id" name="roles_id" class="form-control">
                         <option value="">Filtrar por rol</option>
@@ -36,7 +36,6 @@
                     </select>
                 </div>
         
-                <!-- Select de Sede -->
                 <div class="col-md-3 mb-2">
                     <select id="sedes_id" name="sedes_id" class="form-control">
                         <option value="">Filtrar por sede</option>

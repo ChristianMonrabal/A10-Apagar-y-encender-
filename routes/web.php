@@ -53,3 +53,9 @@ Route::post('/admin/update/{id}', [AdminController::class, 'update'])->middlewar
 Route::delete('/admin/delete/{id}', [AdminController::class, 'destroy'])->middleware('auth')->name('admin.delete');
 Route::get('/admin/disable/{id}', [AdminController::class, 'disable'])->name('admin.disable');
 Route::get('/admin/enable/{id}', [AdminController::class, 'enable'])->name('admin.enable');
+Route::get('/admin/create/category', [AdminController::class, 'createCategory'])->name('admin.create.category');
+Route::post('/admin/create/category', [AdminController::class, 'storeCategory'])->name('admin.store.category');
+Route::get('/admin/create/subcategory', [AdminController::class, 'createSubcategory'])->name('admin.create.subcategory');
+Route::post('/admin/create/subcategory', [AdminController::class, 'storeSubcategory'])->name('admin.store.subcategory');
+
+

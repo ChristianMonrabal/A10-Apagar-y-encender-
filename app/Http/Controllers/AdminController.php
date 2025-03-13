@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Usuario;
 use App\Models\Rol;
 use App\Models\Sede;
+use App\Models\Categoria;
+use App\Models\Subcategoria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -204,4 +206,62 @@ class AdminController extends Controller
 
         return redirect()->route('admin.admin');
     }
+
+    public function createCategory()
+{
+    return view('admin.create_category');
 }
+
+public function storeCategory(Request $request)
+{
+    $request->validate([
+        'nombre' => 'required|string|max:255|unique:categorias,nombre',
+    ], [
+        'nombre.required' => 'Este campo no puede estar vacío.',
+        'nombre.unique' => 'Este nombre de categoría ya está en uso.',
+    ]);
+
+    $categoria = new Categoria();
+    $categoria->nombre = $request->nombre;
+
+    if ($categoria->save()) {
+        session()->flash('success', 'Categoría creada exitosamente.');
+    } else {
+        session()->flash('error', 'Hubo un error al crear la categoría.');
+    }
+
+    return redirect()->route('admin.create.category');
+}
+
+public function createSubcategory()
+{
+    $categorias = Categoria::all();
+    return view('admin.create_subcategory', compact('categorias'));
+}
+
+public function storeSubcategory(Request $request)
+{
+    $request->validate([
+        'nombre' => 'required|string|max:255|unique:subcategorias,nombre',
+        'categorias_id' => 'required|exists:categorias,id',
+    ], [
+        'nombre.required' => 'Este campo no puede estar vacío.',
+        'nombre.unique' => 'Este nombre de subcategoría ya está en uso.',
+        'categorias_id.required' => 'La categoría es obligatoria.',
+        'categorias_id.exists' => 'La categoría seleccionada no es válida.',
+    ]);
+
+    $subcategoria = new Subcategoria();
+    $subcategoria->nombre = $request->nombre;
+    $subcategoria->categorias_id = $request->categorias_id;
+
+    if ($subcategoria->save()) {
+        session()->flash('success', 'Subcategoría creada exitosamente.');
+    } else {
+        session()->flash('error', 'Hubo un error al crear la subcategoría.');
+    }
+
+    return redirect()->route('admin.create.subcategory');
+}
+}
+
