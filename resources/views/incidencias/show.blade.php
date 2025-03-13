@@ -35,32 +35,43 @@
             @endif
             
             <!-- Sección del chat -->
-            <div>
-                <h4>Chat:</h4>
-                <div class="chat-box mb-3" style="border: 1px solid #ccc; padding: 10px; height:300px; overflow-y: scroll;">
-                    @foreach($incidencia->comentario as $comentario)
-                        <div class="mb-2">
-                            @if($comentario->cliente)
-                                <strong>{{ $comentario->cliente->nombre }} (Cliente):</strong>
-                            @elseif($comentario->tecnico)
-                                <strong>{{ $comentario->tecnico->nombre }} (Técnico):</strong>
-                            @else
-                                <strong>Usuario desconocido:</strong>
-                            @endif
-                            {{ $comentario->texto }}
-                        </div>
-                    @endforeach
-                </div>
-                <form action="{{ route('incidencias.addComment', $incidencia->id) }}" method="POST">
-                    @csrf
-                    <div class="form-group">
-                        <textarea name="comentario" rows="3" class="form-control" placeholder="Escribe un comentario..."></textarea>
+<div>
+    <h4>Chat:</h4>
+    <div class="chat-box mb-3" style="border: 1px solid #ccc; padding: 10px; height:300px; overflow-y: auto;">
+        @foreach($incidencia->comentario as $comentario)
+            @if($comentario->cliente)
+                <!-- Mensaje del cliente: se alinea a la derecha -->
+                <div class="d-flex justify-content-end mb-2">
+                    <div class="p-2 bg-primary text-white rounded" style="max-width:70%;">
+                        <small class="d-block text-right"><strong>{{ $comentario->cliente->nombre }} (Cliente)</strong></small>
+                        <span>{{ $comentario->texto }}</span>
                     </div>
-                    <button type="submit" class="btn btn-primary">Enviar</button>
-                </form>
+                </div>
+            @elseif($comentario->tecnico)
+                <!-- Mensaje del técnico: se alinea a la izquierda -->
+                <div class="d-flex justify-content-start mb-2">
+                    <div class="p-2 bg-light border rounded" style="max-width:70%;">
+                        <small class="d-block"><strong>{{ $comentario->tecnico->nombre }} (Técnico)</strong></small>
+                        <span>{{ $comentario->texto }}</span>
+                    </div>
+                </div>
+            @else
+                <!-- Mensaje de usuario desconocido -->
+                <div class="mb-2">
+                    <strong>Usuario desconocido:</strong> {{ $comentario->texto }}
+                </div>
+            @endif
+            @endforeach
             </div>
+            <form action="{{ route('incidencias.addComment', $incidencia->id) }}" method="POST">
+                @csrf
+                <div class="form-group">
+                    <textarea name="comentario" rows="3" class="form-control" placeholder="Escribe un comentario..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </form>
+        </div>
             <!-- Fin sección chat -->
-            
         </div>
     </div>
 
