@@ -9,6 +9,9 @@
 .navbar-custom .navbar-nav .nav-link {
     color: white;
 }
+.navbar-text{
+    color: white !important;
+}
 
 /* Estilo del logo */
 img {

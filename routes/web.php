@@ -6,9 +6,9 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\GestorController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\TecnicoController;
-
 use App\Http\Controllers\IncidenciaController;
 use App\Models\Subcategoria;
+
 
 Route::get('/', function () {
     return view('index');
@@ -38,6 +38,17 @@ Route::get('/client', function () {
     }
 })->name('client');
 
+Route::get('/tecnico', function () {
+    // Verifica que el usuario esté autenticado y tenga rol_id igual a 4 (técnico)
+    if (Auth::check() && Auth::user()->rol_id === 4) {
+        return redirect()->route('tecnico.index'); // Redirige directamente a la lista de incidencias
+    }else {
+        return redirect('/');
+    }
+    
+})->name('tecnico');
+
+
 Route::get('/manager', [GestorController::class, 'incidencias'])->name('manager');
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -57,26 +68,31 @@ Route::get('/categorias/{id}/subcategorias', function($id) {
     return response()->json($subcategorias);
 })->name('categorias.subcategorias');
 
-Route::get('/tecnico', function () {
-    if (Auth::check() && Auth::user()->rol_id === 4) {
-        return redirect()->route('tecnico.home');
-    }
-    return redirect('/');
-})->name('tecnico');
 
-Route::prefix('tecnico')
-    ->name('tecnico.')
-    ->group(function () {
-        Route::get('/', [TecnicoController::class, 'dashboard'])->name('home');
 
-        Route::get('/incidencias', [TecnicoController::class, 'incidenciasIndex'])->name('incidencias.index');
-        Route::get('/incidencias/create', [TecnicoController::class, 'incidenciasCreate'])->name('incidencias.create');
-        Route::post('/incidencias', [TecnicoController::class, 'incidenciasStore'])->name('incidencias.store');
-        Route::get('/incidencias/{id}', [TecnicoController::class, 'incidenciasShow'])->name('incidencias.show');
-        Route::get('/incidencias/{id}/edit', [TecnicoController::class, 'incidenciasEdit'])->name('incidencias.edit');
-        Route::put('/incidencias/{id}', [TecnicoController::class, 'incidenciasUpdate'])->name('incidencias.update');
-        Route::delete('/incidencias/{id}', [TecnicoController::class, 'incidenciasDestroy'])->name('incidencias.destroy');
-});
+
+
+// Dashboard del técnico
+// Route::get('/tecnico', [TecnicoController::class, 'dashboard'])->name('tecnico.index');
+
+// Rutas para la gestión de incidencias del técnico
+Route::get('/tecnico', [TecnicoController::class, 'tecnicoIndex'])->name('tecnico.index');
+Route::post('/tecnico', [TecnicoController::class, 'tecnicoStore'])->name('tecnico.store');
+Route::get('/tecnico/{id}', [TecnicoController::class, 'tecnicoShow'])->name('tecnico.show');
+Route::delete('/tecnico/{id}', [TecnicoController::class, 'tecnicoDestroy'])->name('tecnico.destroy');
+Route::get('/tecnico/incidencias/filter', [TecnicoController::class, 'filterIncidencias'])->name('tecnico.filter');
+
+Route::post('/tecnico/{id}/comentario', [TecnicoController::class, 'storeComentario'])
+    ->name('tecnico.storeComentario');
+Route::post('/tecnico/{id}/iniciar-trabajo', [TecnicoController::class, 'iniciarTrabajo'])
+    ->name('tecnico.iniciarTrabajo');
+Route::post('/tecnico/{id}/finalizar-trabajo', [TecnicoController::class, 'finalizarTrabajo'])
+    ->name('tecnico.finalizarTrabajo');
+
+
+
+
+
 Route::get('/admin', [AdminController::class, 'index'])->name('admin.admin');
 Route::get('/admin/create', [AdminController::class, 'create'])->middleware('auth')->name('admin.create');
 Route::post('/admin/create', [AdminController::class, 'store'])->name('admin.store');
