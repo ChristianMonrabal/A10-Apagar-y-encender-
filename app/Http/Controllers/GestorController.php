@@ -65,6 +65,12 @@ class GestorController extends Controller
         $incidencia = Incidencia::findOrFail($id);
 
         $incidencia->tecnico_id = $request->tecnico_id;
+
+        // Si se asigna un técnico, cambiar el estado a "Asignada" (2)
+        if (!empty($request->tecnico_id)) {
+            $incidencia->estados_id = 2;
+        }
+
         $incidencia->save();
 
         return response()->json(['success' => true]);

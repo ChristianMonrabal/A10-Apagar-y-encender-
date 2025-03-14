@@ -58,7 +58,7 @@
     </div>
 
     {{-- Incidencias --}}
-    <div class="d-flex justify-content-center" id="incidencias-container">
+    <div class="d-flex justify-content-center flex-wrap" id="incidencias-container">
     </div>
 
 </div>
@@ -68,10 +68,11 @@
     var formulario = document.getElementById("filtro-form");
     var contenedorIncidencias = document.getElementById("incidencias-container");
     var botonResetear = document.getElementById("reset-filters");
+
     var csrf = document.querySelector('meta[name="csrf-token"]');
     var csrfToken = csrf.getAttribute('content');
 
-    function loadIncidencias() {
+    function cargarIncidencias() {
         var formData = new FormData(formulario);
         var formString = new URLSearchParams(formData).toString();
 
@@ -89,95 +90,96 @@
 
             data.incidencias.forEach(incidencia => {
                 var div = document.createElement("div");
+                div.classList.add("card", "mb-3", "col-md-4", "shadow-sm", "mx-3");
                 div.style.paddingBottom = "17px";
+
                 div.innerHTML = 
-                    "<p>" + incidencia.titulo + "</p>" +
-                    "<p>" + incidencia.cliente.nombre + "</p>" +
-                    "<p>" +
-                        "<select class='form-select tecnico-select' data-incidencia-id='" + incidencia.id + "' data-tecnico-id='" + incidencia.tecnico.id + "'>" +
-                        @foreach($tecnicosMiSede as $id => $nombre)
-                            "<option value='{{ $id }}' " + (incidencia.tecnico.id == {{ $id }} ? 'selected' : '') + ">{{ $nombre }}</option>" +
-                        @endforeach
+                "<div class='card-header'>" +
+                    "<h5 class='card-title'>" + incidencia.titulo + "</h5>" +
+                    "<h6 class='card-subtitle mb-2 text-muted'>" + incidencia.cliente.nombre + "</h6>" +
+                "</div>" +
+                "<div class='card-body'>" +
+                    "<p><strong>Técnico:</strong>" +
+                        "<select class='form-select tecnico-select' data-incidencia-id='" + incidencia.id + "' onchange='actualizarTecnico(this)'>" +
+                            "<option value='' " + (incidencia.tecnico === null ? "selected" : "") + ">Sin asignar</option>" +
+                            @foreach($tecnicosMiSede as $id => $nombre)
+                                "<option value='{{ $id }}' " + (incidencia.tecnico && incidencia.tecnico.id == {{ $id }} ? 'selected' : '') + ">{{ $nombre }}</option>" +
+                            @endforeach
                         "</select>" +
                     "</p>" +
-                    "<p>" + incidencia.subcategoria.nombre + "</p>" +
-                    "<p>" + incidencia.descripcion + "</p>" +
-                    "<p>" + incidencia.estado.nombre + "</p>" +
-                    "<p>" +
-                        "<select class='form-select prioridad-select' data-incidencia-id='" + incidencia.id + "' data-prioridad-id='" + incidencia.prioridad.id + "'>" +
-                        @foreach($prioridades as $id => $nivel)
-                            "<option value='{{ $id }}' " + (incidencia.prioridad.id == {{ $id }} ? 'selected' : '') + ">{{ $nivel }}</option>" +
-                        @endforeach
+                    "<p><strong>Subcategoría:</strong> " + incidencia.subcategoria.nombre + "</p>" +
+                    "<p><strong>Descripción:</strong> " + incidencia.descripcion + "</p>" +
+                    "<p><strong>Estado:</strong> " + incidencia.estado.nombre + "</p>" +
+                    "<p><strong>Prioridad:</strong>" +
+                        "<select class='form-select prioridad-select' data-incidencia-id='" + incidencia.id + "' onchange='actualizarPrioridad(this)'>" +
+                            @foreach($prioridades as $id => $nivel)
+                                "<option value='{{ $id }}' " + (incidencia.prioridad.id == {{ $id }} ? 'selected' : '') + ">{{ $nivel }}</option>" +
+                            @endforeach
                         "</select>" +
-                    "</p>";
+                    "</p>" +
+                "</div>";
+
                 contenedorIncidencias.appendChild(div);
             });
-
-            // Añadir eventos de cambio
-            document.querySelectorAll(".tecnico-select").forEach(select => {
-                select.addEventListener("change", (e) => {
-                    const incidenciaId = e.target.getAttribute("data-incidencia-id");
-                    const tecnicoId = e.target.value;
-
-                    // Actualizar técnico en el servidor
-                    fetch("/incidencias/" + incidenciaId + "/tecnico", {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': csrfToken
-                        },
-                        body: JSON.stringify({ tecnico_id: tecnicoId })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                        } else {
-                            alert('Error al actualizar técnico.');
-                        }
-                    });
-                });
-            });
-
-            document.querySelectorAll(".prioridad-select").forEach(select => {
-                select.addEventListener("change", (e) => {
-                    const incidenciaId = e.target.getAttribute("data-incidencia-id");
-                    const prioridadId = e.target.value;
-
-                    // Actualizar prioridad en el servidor
-                    fetch("/incidencias/" + incidenciaId + "/prioridad", {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': csrfToken
-                        },
-                        body: JSON.stringify({ prioridad_id: prioridadId })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert('Prioridad actualizada.');
-                        } else {
-                            alert('Error al actualizar prioridad.');
-                        }
-                    });
-                });
-            });
-
         })
         .catch(error => console.error("Error cargando incidencias:", error));
     }
 
+    // Función para actualizar el técnico
+    function actualizarTecnico(select) {
+        var incidenciaId = select.getAttribute("data-incidencia-id");
+        var tecnicoId = select.value;
+
+        fetch("/incidencias/" + incidenciaId + "/tecnico", {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({ tecnico_id: tecnicoId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                alert('Error al actualizar técnico.');
+            }
+        });
+    }
+
+    // Función para actualizar la prioridad
+    function actualizarPrioridad(select) {
+        var incidenciaId = select.getAttribute("data-incidencia-id");
+        var prioridadId = select.value;
+
+        fetch("/incidencias/" + incidenciaId + "/prioridad", {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({ prioridad_id: prioridadId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                alert('Error al actualizar prioridad.');
+            } else {
+                alert('Prioridad actualizada.');
+            }
+        });
+    }
+
     // Llamar a la función cuando cambian los filtros
-    formulario.onchange = loadIncidencias;
+    formulario.onchange = cargarIncidencias;
 
     // Resetear filtros
     botonResetear.onclick = () => {
         formulario.reset();
-        loadIncidencias();
+        cargarIncidencias();
     };
 
     // Cargar incidencias al inicio
-    loadIncidencias();
+    cargarIncidencias();
 
 </script>
 
