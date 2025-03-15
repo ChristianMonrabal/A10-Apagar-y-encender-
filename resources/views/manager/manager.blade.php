@@ -91,9 +91,9 @@
                 div.style.paddingBottom = "17px";
 
                 div.innerHTML = 
-                "<div class='card-header'>" +
-                    "<h5 class='card-title mb-0'>" + incidencia.titulo + "</h5>" +
-                    "<small class='text-muted'>" + incidencia.cliente.nombre + "</small>" +
+                "<div class='card-header' style='background-color: #343A40;'>" +
+                    "<h5 class='card-title mb-0' style='color: white;'>" + incidencia.titulo + "</h5>" +
+                    "<small style='color: #ffffffc7;'>" + incidencia.cliente.nombre + "</small>" +
                 "</div>" +
                 "<div class='card-body'>" +
                     "<p><strong>Técnico:</strong>" +
@@ -109,6 +109,7 @@
                     "<p><strong>Estado:</strong> " + incidencia.estado.nombre + "</p>" +
                     "<p><strong>Prioridad:</strong>" +
                         "<select class='custom-select prioridad-select' data-incidencia-id='" + incidencia.id + "' onchange='actualizarPrioridad(this)'>" +
+                            "<option value='' " + (incidencia.prioridad.id === null ? "selected" : "") + ">Sin asignar</option>" +
                             @foreach($prioridades as $id => $nivel)
                                 "<option value='{{ $id }}' " + (incidencia.prioridad.id == {{ $id }} ? 'selected' : '') + ">{{ $nivel }}</option>" +
                             @endforeach
