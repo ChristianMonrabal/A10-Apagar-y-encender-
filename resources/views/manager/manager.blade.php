@@ -5,7 +5,7 @@
 @section('content')
 <div class="contenido">
     {{-- Filtros --}}
-    <div class="filter-section text-white py-5" style="background: url('{{ asset('img/header.jpg') }}') no-repeat center center; background-size: cover;">
+    <div class="filter-section text-white py-4" style="background: url('{{ asset('img/header.jpg') }}') no-repeat center center; background-size: cover;">
         <div class="container">
             <form id="filtro-form" class="form-row align-items-center">
                 <!-- Técnico -->
@@ -49,7 +49,7 @@
                     </select>
                 </div>
 
-                <div class="text-center w-100 mt-3">
+                <div class="text-center w-100 mt-4 mb-1">
                     <button type="button" class="btn btn-outline-secondary" id="reset-filters">Borrar filtros</button>
                 </div>
             </form>
