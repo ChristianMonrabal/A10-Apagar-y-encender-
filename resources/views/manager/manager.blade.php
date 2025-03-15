@@ -40,7 +40,6 @@
                 <!-- Orden -->
                 <div class="col-md-3 pt-4">
                     <select name="orden" id="orden" class="custom-select">
-                        <option value="">Orden</option>
                         <option value="desc">Descendente</option>
                         <option value="asc">Ascendente</option>
                     </select>
