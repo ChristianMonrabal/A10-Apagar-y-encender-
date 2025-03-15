@@ -9,10 +9,9 @@
         <div class="container">
             <form id="filtro-form" class="form-row align-items-center">
                 <!-- Técnico -->
-                <div class="col-md-3">
-                    <label for="tecnico" class="font-weight-bold">Filtrar por Técnico</label>
+                <div class="col-md-3 pt-4">
                     <select name="tecnico" id="tecnico" class="custom-select">
-                        <option value="">Todos</option>
+                        <option value="">Técnicos</option>
                         @foreach($tecnicosMiSede as $id => $nombre)
                             <option value="{{ $id }}">{{ $nombre }}</option>
                         @endforeach
@@ -20,10 +19,9 @@
                 </div>
 
                 <!-- Prioridad -->
-                <div class="col-md-3">
-                    <label for="prioridad" class="font-weight-bold">Filtrar por Prioridad</label>
+                <div class="col-md-3 pt-4">
                     <select name="prioridad" id="prioridad" class="custom-select">
-                        <option value="">Todos</option>
+                        <option value="">Prioridades</option>
                         @foreach($prioridades as $id => $nivel)
                             <option value="{{ $id }}">{{ $nivel }}</option>
                         @endforeach
@@ -31,19 +29,18 @@
                 </div>
 
                 <!-- Estado -->
-                <div class="col-md-3">
-                    <label for="estado" class="font-weight-bold">Estado</label>
+                <div class="col-md-3 pt-4">
                     <select name="estado" id="estado" class="custom-select">
-                        <option value="">Todos</option>
+                        <option value="">Incidencias</option>
                         <option value="abiertas">Quitar Cerradas</option>
                         <option value="cerradas">Ver Cerradas</option>
                     </select>
                 </div>
 
                 <!-- Orden -->
-                <div class="col-md-3">
-                    <label for="orden" class="font-weight-bold">Orden</label>
+                <div class="col-md-3 pt-4">
                     <select name="orden" id="orden" class="custom-select">
+                        <option value="">Orden</option>
                         <option value="desc">Descendente</option>
                         <option value="asc">Ascendente</option>
                     </select>
