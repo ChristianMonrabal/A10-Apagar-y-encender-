@@ -46,8 +46,9 @@
                                 </span>
                             </td>
                             <td>
-                                {{ $incidencia->fecha_resolucion ? $incidencia->fecha_resolucion->format('d-m-Y') : 'Pendiente' }}
+                                {{ $incidencia->fecha_resolucion ? \Carbon\Carbon::parse($incidencia->fecha_resolucion)->format('d-m-Y') : 'Pendiente' }}
                             </td>
+                            
                             <td>
                                 <a href="{{ route('tecnico.show', $incidencia->id) }}" class="btn btn-info btn-sm" style="padding: 0.25rem 0.4rem; font-size: 0.75rem;">
                                     <i class="fas fa-eye"></i> Ver

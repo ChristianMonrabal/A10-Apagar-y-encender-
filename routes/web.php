@@ -91,6 +91,7 @@ Route::post('/tecnico/{id}/iniciar-trabajo', [TecnicoController::class, 'iniciar
     ->name('tecnico.iniciarTrabajo');
 Route::post('/tecnico/{id}/finalizar-trabajo', [TecnicoController::class, 'finalizarTrabajo'])
     ->name('tecnico.finalizarTrabajo');
+Route::get('incidencias/filter', [IncidenciaController::class, 'filterIncidencias'])->name('incidencias.filter');
 
 
 

@@ -43,18 +43,18 @@ class TecnicoController extends Controller
         $data = $request->validate([
             'texto' => 'required|string'
         ]);
-    
+
         $user = Auth::user();
         $data['incidencias_id'] = $incidenciaId;
-        
+
         // Siempre se asigna como técnico (ignoras por completo el rol)
         $data['tecnico_id'] = $user->id;
-    
+
         Comentario::create($data);
-    
+
         return redirect()->back()->with('success', 'Mensaje enviado correctamente.');
     }
-    
+
 
     public function iniciarTrabajo($id)
     {
@@ -81,47 +81,49 @@ class TecnicoController extends Controller
     }
 
     public function finalizarTrabajo($id)
-    {
-        // Buscar la incidencia o retornar error 404 si no existe
-        $incidencia = Incidencia::findOrFail($id);
-
-        // Verificar que la incidencia esté en estado "En trabajo"
-        if (optional($incidencia->estado)->nombre === 'En trabajo') {
-            // Buscar el registro del estado "Finalizada"
-            $estadoFinalizada = Estado::where('nombre', 'Resuelta')->first();
-
-            if ($estadoFinalizada) {
-                // Actualizar la incidencia
-                $incidencia->estados_id = $estadoFinalizada->id;
-                $incidencia->save();
-
-                return redirect()->back()->with('success', 'La incidencia se ha actualizado a "Finalizada".');
-            } else {
-                return redirect()->back()->with('error', 'No se encontró el estado "Finalizada".');
-            }
-        }
-
-        return redirect()->back()->with('error', 'La incidencia no se encuentra en estado "En trabajo".');
-    }
-    public function filterIncidencias(Request $request)
 {
-    $search = $request->input('search'); // El valor que mandaremos desde AJAX
-    // También podrías tener otros filtros: estado, prioridad, fechas, etc.
+    // Buscar la incidencia o retornar error 404 si no existe
+    $incidencia = Incidencia::findOrFail($id);
 
-    // Construyes la query de filtrado:
-    $query = Incidencia::with(['cliente', 'tecnico', 'estado', 'prioridad']);
+    // Verificar que la incidencia esté en estado "En trabajo"
+    if (optional($incidencia->estado)->nombre === 'En trabajo') {
+        // Buscar el registro del estado "Resuelta"
+        $estadoFinalizada = Estado::where('nombre', 'Resuelta')->first();
 
-    if (!empty($search)) {
-        $query->where('titulo', 'LIKE', "%{$search}%")
-              ->orWhere('descripcion', 'LIKE', "%{$search}%");
+        if ($estadoFinalizada) {
+            // Actualizar la incidencia
+            $incidencia->estados_id = $estadoFinalizada->id;
+            // Actualizar la fecha de resolución con la fecha y hora actual
+            $incidencia->fecha_resolucion = now();
+            $incidencia->save();
+
+            return redirect()->back()->with('success', 'La incidencia se ha actualizado a "Finalizada".');
+        } else {
+            return redirect()->back()->with('error', 'No se encontró el estado "Finalizada".');
+        }
     }
 
-    // Obtienes las incidencias filtradas
-    $incidencias = $query->get();
-
-    // Retornamos una vista parcial que solo contenga <tr> de la tabla:
-    // (Puedes llamarla "tecnico.partials.incidencias-filtradas" por ejemplo)
-    return view('tecnico.partials.incidencias-filtradas', compact('incidencias'));
+    return redirect()->back()->with('error', 'La incidencia no se encuentra en estado "En trabajo".');
 }
 
+    public function filterIncidencias(Request $request)
+    {
+        $search = $request->input('search'); // El valor que mandaremos desde AJAX
+        // También podrías tener otros filtros: estado, prioridad, fechas, etc.
+
+        // Construyes la query de filtrado:
+        $query = Incidencia::with(['cliente', 'tecnico', 'estado', 'prioridad']);
+
+        if (!empty($search)) {
+            $query->where('titulo', 'LIKE', "%{$search}%")
+                ->orWhere('descripcion', 'LIKE', "%{$search}%");
+        }
+
+        // Obtienes las incidencias filtradas
+        $incidencias = $query->get();
+
+        // Retornamos una vista parcial que solo contenga <tr> de la tabla:
+        // (Puedes llamarla "tecnico.partials.incidencias-filtradas" por ejemplo)
+        return view('tecnico.partials.incidencias-filtradas', compact('incidencias'));
+    }
 }
