@@ -23,7 +23,7 @@
             @if(Auth::check())
                 <li class="nav-item d-none d-lg-block">
                     <span class="navbar-text mr-3">
-                        <strong>Hola {{ Auth::user()->nombre }}</strong>
+                        <strong>Bienvenid@ {{ Auth::user()->nombre }}</strong>
                     </span>
                 </li>
 

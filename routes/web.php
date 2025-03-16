@@ -48,8 +48,11 @@ Route::get('/tecnico', function () {
     
 })->name('tecnico');
 
-
-Route::get('/manager', [GestorController::class, 'incidencias'])->name('manager');
+Route::controller(GestorController::class)->group(function () {
+    Route::get('/manager', 'incidencias')->name('manager');
+    Route::patch('/incidencias/{id}/tecnico', 'actualizarTecnico')->name('actualizarTecnico');
+    Route::patch('/incidencias/{id}/prioridad', 'actualizarPrioridad')->name('actualizarPrioridad');
+});
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
@@ -105,5 +108,3 @@ Route::get('/admin/create/category', [AdminController::class, 'createCategory'])
 Route::post('/admin/create/category', [AdminController::class, 'storeCategory'])->name('admin.store.category');
 Route::get('/admin/create/subcategory', [AdminController::class, 'createSubcategory'])->name('admin.create.subcategory');
 Route::post('/admin/create/subcategory', [AdminController::class, 'storeSubcategory'])->name('admin.store.subcategory');
-
-
