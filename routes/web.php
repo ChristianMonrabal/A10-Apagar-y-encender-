@@ -82,18 +82,12 @@ Route::get('/categorias/{id}/subcategorias', function($id) {
 Route::get('/tecnico', [TecnicoController::class, 'tecnicoIndex'])->name('tecnico.index');
 Route::post('/tecnico', [TecnicoController::class, 'tecnicoStore'])->name('tecnico.store');
 Route::get('/tecnico/{id}', [TecnicoController::class, 'tecnicoShow'])->name('tecnico.show');
-Route::delete('/tecnico/{id}', [TecnicoController::class, 'tecnicoDestroy'])->name('tecnico.destroy');
-Route::get('/tecnico/incidencias/filter', [TecnicoController::class, 'filterIncidencias'])->name('tecnico.filter');
-
 Route::post('/tecnico/{id}/comentario', [TecnicoController::class, 'storeComentario'])
     ->name('tecnico.storeComentario');
 Route::post('/tecnico/{id}/iniciar-trabajo', [TecnicoController::class, 'iniciarTrabajo'])
     ->name('tecnico.iniciarTrabajo');
 Route::post('/tecnico/{id}/finalizar-trabajo', [TecnicoController::class, 'finalizarTrabajo'])
     ->name('tecnico.finalizarTrabajo');
-Route::get('incidencias/filter', [IncidenciaController::class, 'filterIncidencias'])->name('incidencias.filter');
-
-
 
 
 

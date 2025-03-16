@@ -2,25 +2,71 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Models\Prioridad;
 use App\Models\Incidencia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Comentario;
 use App\Models\Estado;
 
+
+
+
+
 class TecnicoController extends Controller
 {
-    public function dashboard()
-    {
-        return view('tecnico.index');
+    // public function dashboard()
+    // {
+    //     return view('tecnico.index');
+    // }
+
+
+    public function tecnicoIndex(Request $request)
+{
+    // Obtener el usuario autenticado (por ejemplo, el técnico)
+    $user = Auth::user();
+
+    // Iniciar la consulta filtrando por técnico
+    $query = Incidencia::where('tecnico_id', $user->id)
+                ->with(['cliente', 'tecnico', 'estado', 'prioridad']);
+
+    // Filtro de búsqueda en título y descripción
+    if ($search = $request->input('search')) {
+        $query->where(function($q) use ($search) {
+            $q->where('titulo', 'LIKE', "%{$search}%")
+              ->orWhere('descripcion', 'LIKE', "%{$search}%");
+        });
     }
 
-    public function tecnicoIndex()
-    {
-        $user = Auth::user(); // Obtener el usuario autenticado
-        $incidencias = Incidencia::where('tecnico_id', $user->id)->get();
-        return view('tecnico.index', compact('incidencias'));
+    // Filtro por estado (si se selecciona uno)
+    if ($estado = $request->input('estado')) {
+        $query->whereHas('estado', function($q) use ($estado) {
+            $q->where('id', $estado);
+        });
     }
+
+    // (Filtro por usuario eliminado)
+
+    // Filtro por prioridad (si se selecciona una)
+    if ($prioridad = $request->input('prioridad')) {
+        $query->whereHas('prioridad', function($q) use ($prioridad) {
+            $q->where('id', $prioridad);
+        });
+    }
+
+    // Obtener los resultados filtrados
+    $incidencias = $query->get();
+
+    // Obtener los valores para los selects de filtro
+    $estados = Estado::pluck('nombre', 'id');
+    $prioridades = Prioridad::pluck('nivel', 'id');
+
+    // Retornar la vista con las variables necesarias
+    return view('tecnico.index', compact('incidencias', 'estados', 'prioridades'));
+}
+
+    
 
     public function tecnicoShow($id)
     {
@@ -106,24 +152,6 @@ class TecnicoController extends Controller
     return redirect()->back()->with('error', 'La incidencia no se encuentra en estado "En trabajo".');
 }
 
-    public function filterIncidencias(Request $request)
-    {
-        $search = $request->input('search'); // El valor que mandaremos desde AJAX
-        // También podrías tener otros filtros: estado, prioridad, fechas, etc.
 
-        // Construyes la query de filtrado:
-        $query = Incidencia::with(['cliente', 'tecnico', 'estado', 'prioridad']);
-
-        if (!empty($search)) {
-            $query->where('titulo', 'LIKE', "%{$search}%")
-                ->orWhere('descripcion', 'LIKE', "%{$search}%");
-        }
-
-        // Obtienes las incidencias filtradas
-        $incidencias = $query->get();
-
-        // Retornamos una vista parcial que solo contenga <tr> de la tabla:
-        // (Puedes llamarla "tecnico.partials.incidencias-filtradas" por ejemplo)
-        return view('tecnico.partials.incidencias-filtradas', compact('incidencias'));
-    }
+        
 }
