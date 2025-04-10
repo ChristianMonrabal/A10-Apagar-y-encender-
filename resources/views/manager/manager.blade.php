@@ -87,31 +87,33 @@
                 div.style.paddingBottom = "17px";
 
                 div.innerHTML = 
-                "<div class='card-header' style='background-color: #343A40;'>" +
-                    "<h5 class='card-title mb-0' style='color: white;'>" + incidencia.titulo + "</h5>" +
-                    "<small style='color: #ffffffc7;'>" + incidencia.cliente.nombre + "</small>" +
-                "</div>" +
-                "<div class='card-body'>" +
-                    "<p><strong>Técnico:</strong>" +
-                        "<select class='custom-select tecnico-select' data-incidencia-id='" + incidencia.id + "' onchange='actualizarTecnico(this)'>" +
-                            "<option value='' " + (incidencia.tecnico === null ? "selected" : "") + ">Sin asignar</option>" +
-                            @foreach($tecnicosMiSede as $id => $nombre)
-                                "<option value='{{ $id }}' " + (incidencia.tecnico && incidencia.tecnico.id == {{ $id }} ? 'selected' : '') + ">{{ $nombre }}</option>" +
-                            @endforeach
-                        "</select>" +
-                    "</p>" +
-                    "<p><strong>Subcategoría:</strong> " + incidencia.subcategoria.nombre + "</p>" +
-                    "<p><strong>Descripción:</strong> " + incidencia.descripcion + "</p>" +
-                    "<p><strong>Estado:</strong> " + incidencia.estado.nombre + "</p>" +
-                    "<p><strong>Prioridad:</strong>" +
-                        "<select class='custom-select prioridad-select' data-incidencia-id='" + incidencia.id + "' onchange='actualizarPrioridad(this)'>" +
-                            "<option value='' " + (incidencia.prioridad.id === null ? "selected" : "") + ">Sin asignar</option>" +
-                            @foreach($prioridades as $id => $nivel)
-                                "<option value='{{ $id }}' " + (incidencia.prioridad.id == {{ $id }} ? 'selected' : '') + ">{{ $nivel }}</option>" +
-                            @endforeach
-                        "</select>" +
-                    "</p>" +
-                "</div>";
+                    "<div class='card-header' style='background-color: #343A40;'>" +
+                        "<h5 class='card-title mb-0' style='color: white;'>" + incidencia.titulo + "</h5>" +
+                        "<small style='color: #ffffffc7;'>" + (incidencia.cliente ? incidencia.cliente.nombre : "") + "</small>" +
+                    "</div>" +
+                    "<div class='card-body'>" +
+                        "<p><strong>Técnico:</strong>" +
+                            "<select class='custom-select tecnico-select' data-incidencia-id='" + incidencia.id + "' onchange='actualizarTecnico(this)'>" +
+                                // Si incidencia.tecnico es null se selecciona "Sin asignar"
+                                "<option value='' " + (incidencia.tecnico == null ? "selected" : "") + ">Sin asignar</option>" +
+                                @foreach($tecnicosMiSede as $id => $nombre)
+                                    "<option value='{{ $id }}' " + ((incidencia.tecnico && incidencia.tecnico.id == {{ $id }}) ? 'selected' : '') + ">{{ $nombre }}</option>" +
+                                @endforeach
+                            "</select>" +
+                        "</p>" +
+                        "<p><strong>Subcategoría:</strong> " + (incidencia.subcategoria ? incidencia.subcategoria.nombre : "") + "</p>" +
+                        "<p><strong>Descripción:</strong> " + incidencia.descripcion + "</p>" +
+                        "<p><strong>Estado:</strong> " + (incidencia.estado ? incidencia.estado.nombre : "") + "</p>" +
+                        "<p><strong>Prioridad:</strong>" +
+                            "<select class='custom-select prioridad-select' data-incidencia-id='" + incidencia.id + "' onchange='actualizarPrioridad(this)'>" +
+                                // Verificamos si incidencia.prioridad existe; si no, se selecciona "Sin asignar"
+                                "<option value='' " + (incidencia.prioridad == null ? "selected" : "") + ">Sin asignar</option>" +
+                                @foreach($prioridades as $id => $nivel)
+                                    "<option value='{{ $id }}' " + ((incidencia.prioridad && incidencia.prioridad.id == {{ $id }}) ? 'selected' : '') + ">{{ $nivel }}</option>" +
+                                @endforeach
+                            "</select>" +
+                        "</p>" +
+                    "</div>";
 
                 contenedorIncidencias.appendChild(div);
             });

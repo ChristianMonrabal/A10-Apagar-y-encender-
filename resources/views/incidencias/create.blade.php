@@ -3,7 +3,6 @@
 @section('content')
 <div class="container">
     <h1>Nueva Incidencia</h1>
-    
     <form method="POST" action="{{ route('incidencias.store') }}" enctype="multipart/form-data">
         @csrf
         

@@ -48,74 +48,88 @@ class IncidenciaController extends Controller
     }
     
     /**
-     * Guarda la nueva incidencia.
+     * Guarda la nueva incidencia y asigna automáticamente el gestor correspondiente a la sede del cliente.
      */
     public function store(Request $request)
-{
-    $user = Auth::user();
-    
-    // Validación de datos...
-    $request->validate([
-        'titulo'          => 'required|string|max:255',
-        'descripcion'     => 'required|string',
-        'categoria_id'    => 'required|exists:categorias,id',
-        'subcategoria_id' => 'required|exists:subcategorias,id',
-        'comentario'      => 'nullable|string',
-        'imagen'          => 'nullable|image|max:2048',
-    ]);
+    {
+        $user = Auth::user();
+        
+        // Validación de datos...
+        $request->validate([
+            'titulo'          => 'required|string|max:255',
+            'descripcion'     => 'required|string',
+            'categoria_id'    => 'required|exists:categorias,id',
+            'subcategoria_id' => 'required|exists:subcategorias,id',
+            'comentario'      => 'nullable|string',
+            'imagen'          => 'nullable|image|max:2048',
+        ]);
 
-    // Validar que la subcategoría pertenece a la categoría seleccionada
-    $subcategoria = Subcategoria::findOrFail($request->input('subcategoria_id'));
-    if ($subcategoria->categorias_id != $request->input('categoria_id')) {
-        return back()->withErrors('La subcategoría seleccionada no pertenece a la categoría elegida.');
-    }
-    
-    // Obtener el estado "Sin asignar"
-    $estado = Estado::where('nombre', 'Sin asignar')->first();
-    if (!$estado) {
-        return back()->withErrors('Estado "Sin asignar" no encontrado.');
-    }
+        // Validar que la subcategoría pertenece a la categoría seleccionada
+        $subcategoria = Subcategoria::findOrFail($request->input('subcategoria_id'));
+        if ($subcategoria->categorias_id != $request->input('categoria_id')) {
+            return back()->withErrors('La subcategoría seleccionada no pertenece a la categoría elegida.');
+        }
+        
+        // Obtener el estado "Sin asignar"
+        $estado = Estado::where('nombre', 'Sin asignar')->first();
+        if (!$estado) {
+            return back()->withErrors('Estado "Sin asignar" no encontrado.');
+        }
 
-    try {
-        DB::transaction(function () use ($request, $user, $estado) {
-            // Crear la incidencia
-            $incidencia = new Incidencia();
-            $incidencia->titulo = $request->input('titulo');
-            $incidencia->descripcion = $request->input('descripcion');
-            $incidencia->subcategorias_id = $request->input('subcategoria_id');
-            $incidencia->estados_id = $estado->id;
-            $incidencia->cliente_id = $user->id;
-            $incidencia->save();
-            
-            // Guardar comentario inicial (opcional)
-            if ($request->filled('comentario')) {
-                $incidencia->comentario()->create([
-                    'cliente_id' => $user->id,
-                    'texto'      => $request->input('comentario'),
-                ]);
-            }
-            
-            // Guardar imagen si se ha subido
-            if ($request->hasFile('imagen')) {
-                $file = $request->file('imagen');
-                $filename = $file->hashName();  // Nombre hash similar a store()
-                $destinationPath = public_path('img/incidencias');
-                if (!file_exists($destinationPath)) {
-                    mkdir($destinationPath, 0755, true);
+        try {
+            DB::transaction(function () use ($request, $user, $estado) {
+                // Crear la incidencia
+                $incidencia = new Incidencia();
+                $incidencia->titulo = $request->input('titulo');
+                $incidencia->descripcion = $request->input('descripcion');
+                $incidencia->subcategorias_id = $request->input('subcategoria_id');
+                $incidencia->estados_id = $estado->id;
+                $incidencia->cliente_id = $user->id;
+                $incidencia->save();
+                
+                // Asignar automáticamente el gestor de la sede
+                // Se asume que el cliente tiene un atributo 'sedes_id'
+                // y que en la tabla de usuarios el gestor se identifica con roles_id = 3.
+                $gestor = \App\Models\Usuario::where('sedes_id', $user->sedes_id)
+                            ->where('roles_id', 3)
+                            ->first();
+                
+                if ($gestor) {
+                    $incidencia->gestor_id = $gestor->id;
+                    $incidencia->save();
+                } else {
+                    \Log::warning('No se encontró gestor para el cliente con sedes_id: ' . $user->sedes_id);
                 }
-                $file->move($destinationPath, $filename);
-                $incidencia->imagen()->create([
-                    'ruta' => 'img/incidencias/' . $filename,
-                ]);
-            }
-        });
-    } catch (\Exception $e) {
-        return back()->withErrors('Ocurrió un error al registrar la incidencia: ' . $e->getMessage());
+
+                // Guardar comentario inicial (opcional)
+                if ($request->filled('comentario')) {
+                    $incidencia->comentario()->create([
+                        'cliente_id' => $user->id,
+                        'texto'      => $request->input('comentario'),
+                    ]);
+                }
+                
+                // Guardar imagen si se ha subido
+                if ($request->hasFile('imagen')) {
+                    $file = $request->file('imagen');
+                    $filename = $file->hashName();  // Genera un nombre hash similar a store()
+                    $destinationPath = public_path('img/incidencias');
+                    if (!file_exists($destinationPath)) {
+                        mkdir($destinationPath, 0755, true);
+                    }
+                    $file->move($destinationPath, $filename);
+                    $incidencia->imagen()->create([
+                        'ruta' => 'img/incidencias/' . $filename,
+                    ]);
+                }
+            });
+        } catch (\Exception $e) {
+            return back()->withErrors('Ocurrió un error al registrar la incidencia: ' . $e->getMessage());
+        }
+        
+        return redirect()->route('incidencias.index')
+                         ->with('success', 'Incidencia registrada correctamente.');
     }
-    
-    return redirect()->route('incidencias.index')
-                     ->with('success', 'Incidencia registrada correctamente.');
-}
     
     /**
      * Muestra el detalle de una incidencia.
@@ -173,21 +187,21 @@ class IncidenciaController extends Controller
         // Verifica que la incidencia esté en estado "Resuelta"
         if ($incidencia->estado->nombre !== 'Resuelta') {
             return redirect()->route('incidencias.show', $id)
-                            ->with('error', 'La incidencia no se encuentra en estado "Resuelta".');
+                             ->with('error', 'La incidencia no se encuentra en estado "Resuelta".');
         }
         
         // Buscar el estado "Cerrada"
         $estadoCerrada = Estado::where('nombre', 'Cerrada')->first();
         if (!$estadoCerrada) {
             return redirect()->route('incidencias.show', $id)
-                            ->with('error', 'Estado "Cerrada" no encontrado.');
+                             ->with('error', 'Estado "Cerrada" no encontrado.');
         }
         
         // Actualiza el estado de la incidencia a "Cerrada"
         $incidencia->estados_id = $estadoCerrada->id;
         $incidencia->save();
 
-    return redirect()->route('incidencias.show', $id)
-                     ->with('success', 'Incidencia cerrada correctamente.');
-}
+        return redirect()->route('incidencias.show', $id)
+                         ->with('success', 'Incidencia cerrada correctamente.');
+    }
 }
