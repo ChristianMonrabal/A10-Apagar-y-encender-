@@ -14,132 +14,152 @@ class UsuarioSeeder extends Seeder
 
         $now = Carbon::now();
 
-        Usuario::create([
+/*1*/   Usuario::create([
             'nombre' => 'Juan Carlos',
             'email' => 'juancarlosprado@gmail.com',
             'password' => bcrypt('qweQWE123'),
-            'sedes_id' => 2,
-            'roles_id' => 1,
+            'sedes_id' => 2, // Berlin
+            'roles_id' => 1, // Cliente
             'created_at' => $now,
             'updated_at' => $now,
         ]);    
         
-        Usuario::create([
+/*2*/   Usuario::create([
             'nombre' => 'Christian',
             'email' => 'christianmonrabal@gmail.com',
             'password' => bcrypt('qweQWE123'),
-            'sedes_id' => 1,
-            'roles_id' => 2,
+            'sedes_id' => 1, // Barcelona
+            'roles_id' => 2, // Administrador
             'created_at' => $now,
             'updated_at' => $now,
         ]);
 
-        Usuario::create([
+/*3*/   Usuario::create([
             'nombre' => 'Pol Marc',
             'email' => 'polmarcmontero@gmail.com',
             'password' => bcrypt('qweQWE123'),
-            'sedes_id' => 3,
-            'roles_id' => 3,
+            'sedes_id' => 3, // Montreal
+            'roles_id' => 3, // Gestor
             'created_at' => $now,
             'updated_at' => $now,
         ]);
           
-        Usuario::create([
+/*4*/   Usuario::create([
             'nombre' => 'Daniel',
             'email' => 'danielbecerra@gmail.com',
             'password' => bcrypt('qweQWE123'),
-            'sedes_id' => 1,
-            'roles_id' => 4,
+            'sedes_id' => 1, // Barcelona
+            'roles_id' => 4, // Tecnico
             'created_at' => $now,
             'updated_at' => $now,
         ]);
           
-        Usuario::create([
+/*5*/   Usuario::create([
             'nombre' => 'Gestor 1',
             'email' => 'gestor1@gmail.com',
             'password' => bcrypt('qweQWE123'),
-            'sedes_id' => 1,
-            'roles_id' => 3,
+            'sedes_id' => 1, // Barcelona
+            'roles_id' => 3, // Gestor
             'created_at' => $now,
             'updated_at' => $now,
         ]);
           
-        Usuario::create([
+/*6*/   Usuario::create([
             'nombre' => 'Gestor 2',
             'email' => 'gestor2@gmail.com',
             'password' => bcrypt('qweQWE123'),
-            'sedes_id' => 2,
-            'roles_id' => 3,
+            'sedes_id' => 2, // Berlin
+            'roles_id' => 3, // Gestor
             'created_at' => $now,
             'updated_at' => $now,
         ]);
 
-        Usuario::create([
-            'nombre' => 'Gestor 3',
-            'email' => 'gestor3@gmail.com',
-            'password' => bcrypt('qweQWE123'),
-            'sedes_id' => 3,
-            'roles_id' => 3,
-            'created_at' => $now,
-            'updated_at' => $now,
-        ]);
-
-        Usuario::create([
+/*7*/   Usuario::create([
             'nombre' => 'Tecnico 1',
             'email' => 'tecnico1@gmail.com',
             'password' => bcrypt('qweQWE123'),
-            'sedes_id' => 1,
-            'roles_id' => 4,
+            'sedes_id' => 1, // Barcelona
+            'roles_id' => 4, // Tecnico
             'created_at' => $now,
             'updated_at' => $now,
         ]);
 
-        Usuario::create([
+/*8*/   Usuario::create([
             'nombre' => 'Tecnico 2',
             'email' => 'tecnico2@gmail.com',
             'password' => bcrypt('qweQWE123'),
-            'sedes_id' => 1,
-            'roles_id' => 4,
+            'sedes_id' => 1, // Barcelona
+            'roles_id' => 4, // Tecnico
             'created_at' => $now,
             'updated_at' => $now,
         ]);
 
-        Usuario::create([
+/*9*/   Usuario::create([
             'nombre' => 'Tecnico 3',
             'email' => 'tecnico3@gmail.com',
             'password' => bcrypt('qweQWE123'),
-            'sedes_id' => 2,
-            'roles_id' => 4,
+            'sedes_id' => 2, // Berlin
+            'roles_id' => 4, // Tecnico
             'created_at' => $now,
             'updated_at' => $now,
         ]);
 
-        Usuario::create([
+/*10*/  Usuario::create([
             'nombre' => 'Tecnico 4',
             'email' => 'tecnico4@gmail.com',
             'password' => bcrypt('qweQWE123'),
-            'sedes_id' => 2,
-            'roles_id' => 4,
+            'sedes_id' => 2, // Berlin
+            'roles_id' => 4, // Tecnico
             'created_at' => $now,
             'updated_at' => $now,
         ]);
 
-        Usuario::create([
+/*11*/  Usuario::create([
             'nombre' => 'Tecnico 5',
             'email' => 'tecnico5@gmail.com',
             'password' => bcrypt('qweQWE123'),
-            'sedes_id' => 3,
-            'roles_id' => 4,
+            'sedes_id' => 3, // Montreal
+            'roles_id' => 4, // Tecnico
             'created_at' => $now,
             'updated_at' => $now,
         ]);
 
-        Usuario::create([
+/*12*/  Usuario::create([
             'nombre' => 'Tecnico 6',
             'email' => 'tecnico6@gmail.com',
             'password' => bcrypt('qweQWE123'),
-            'sedes_id' => 3,
-            'roles_id' => 4,
+            'sedes_id' => 3, // Montreal
+            'roles_id' => 4, // Tecnico
+            'created_at' => $now,
+            'updated_at' => $now,
+        ]);
+
+/*13*/  Usuario::create([
+            'nombre' => 'Cliente 1',
+            'email' => 'cliente1@gmail.com',
+            'password' => bcrypt('qweQWE123'),
+            'sedes_id' => 1, // Barcelona
+            'roles_id' => 1, // Cliente
+            'created_at' => $now,
+            'updated_at' => $now,
+        ]);
+
+/*14*/  Usuario::create([
+            'nombre' => 'Cliente 2',
+            'email' => 'cliente2@gmail.com',
+            'password' => bcrypt('qweQWE123'),
+            'sedes_id' => 2, // Berlin
+            'roles_id' => 1, // Cliente
+            'created_at' => $now,
+            'updated_at' => $now,
+        ]);
+
+/*15*/  Usuario::create([
+            'nombre' => 'Cliente 3',
+            'email' => 'cliente3@gmail.com',
+            'password' => bcrypt('qweQWE123'),
+            'sedes_id' => 3, // Montreal
+            'roles_id' => 1, // Cliente
             'created_at' => $now,
             'updated_at' => $now,
         ]);

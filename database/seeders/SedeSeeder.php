@@ -17,19 +17,19 @@ class SedeSeeder extends Seeder
 
         $now = Carbon::now();
 
-        Sede::create([
+/*1*/   Sede::create([
             'nombre' => 'Barcelona',
             'created_at' => $now,
             'updated_at' => $now,
         ]);
         
-        Sede::create([
+/*2*/   Sede::create([
             'nombre' => 'Berlin',
             'created_at' => $now,
             'updated_at' => $now,
         ]);   
 
-        Sede::create([
+/*3*/   Sede::create([
             'nombre' => 'Montreal',
             'created_at' => $now,
             'updated_at' => $now,
