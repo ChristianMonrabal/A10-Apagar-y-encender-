@@ -144,5 +144,31 @@ class IncidenciaSeeder extends Seeder
             'created_at'     => $now,
             'updated_at'     => $now,
         ]);
+
+/*10*/  Incidencia::create([
+            'titulo'         => 'Incidencia sin assignar',
+            'cliente_id'     => 2,
+            'tecnico_id'     => NULL,
+            'gestor_id'      => 4,
+            'subcategorias_id' => 2,    // "Hardware general" o "Red"
+            'descripcion'    => 'No hay ningún técnico asignado a esta incidencia',
+            'estados_id'     => 1,
+            'prioridades_id' => 1,
+            'created_at'     => $now,
+            'updated_at'     => $now,
+        ]);
+
+/*11*/  Incidencia::create([
+            'titulo'         => 'Incidencia sin assignar 2',
+            'cliente_id'     => 2,
+            'tecnico_id'     => NULL,
+            'gestor_id'      => 4,
+            'subcategorias_id' => 2,    // "Hardware general" o "Red"
+            'descripcion'    => 'No hay ningún técnico ni ninguna prioridad asignados a esta incidencia',
+            'estados_id'     => 1,
+            'prioridades_id' => NULL,
+            'created_at'     => $now,
+            'updated_at'     => $now,
+        ]);
     }
 }
